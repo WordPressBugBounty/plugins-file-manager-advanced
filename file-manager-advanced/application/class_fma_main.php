@@ -148,7 +148,7 @@ class class_fma_main {
 				wp_enqueue_script( 'afm-view', plugins_url('library/js/commands/view.js', __FILE__));
 				wp_enqueue_script( 'afm-quicklook.googledocs', plugins_url('library/js/extras/quicklook.googledocs.js', __FILE__));
 
-				$locale = isset($this->settings['fma_locale']) ? $this->settings['fma_locale'] : 'en';
+				$locale = isset($this->settings['fma_locale']) ? sanitize_file_name($this->settings['fma_locale']) : 'en';
 				wp_enqueue_script( 'fma_lang', plugins_url('library/js/i18n/elfinder.'.$locale.'.js', __FILE__));
 				   
 				wp_enqueue_script( 'codemirror', plugins_url('library/codemirror/lib/codemirror.js',  __FILE__ ));

@@ -91,12 +91,12 @@ class class_fma_connector
 						'URL'           => $url, // URL to files (REQUIRED)
 						'trashHash'     => $trash_f,                     // elFinder's hash of trash folder
 						'winHashFix'    => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
-						'uploadDeny'    => array('all'),                // All Mimetypes not allowed to upload
+						'uploadDeny'    => current_user_can('manage_options') ? array('all') : array('text/x-php'),                // All Mimetypes not allowed to upload
 						'uploadAllow'   => $allowUpload,// Mimetype `image` and `text/plain` allowed to upload
-						'uploadOrder'   => array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
+						'uploadOrder'   => current_user_can('manage_options') ? array('deny','allow') :array('allow', 'deny'),      // allowed Mimetype `image` and `text/plain` only
 						'disabled'      => array('help','preference'),
 						'accessControl' => 'access',               
-						'acceptedName'  => 'validName',
+						'acceptedName'  => current_user_can('manage_options') ? '' : 'afm_plugin_file_validName',
 						'uploadMaxSize' => $max_upload_size, 
 						'attributes' => array(
 											   array(
@@ -133,11 +133,25 @@ $fmaconnector = new elFinderConnector(new elFinder($opts));
 $fmaconnector->run();
 die;
 }
-public function access($attr, $path, $data, $volume, $isDir, $relpath) {
+}
+/**
+ * Hook to fix invalid and malicious files
+ */
+function afm_plugin_file_validName($name) {
+	if(!empty($name)) {
+		$name = sanitize_file_name($name);
+		$lower_name = strtolower($name);
+		if(strpos($lower_name, '.php') || strpos($lower_name, '.phtml') || strpos($lower_name, '.ini') || strpos($lower_name, '.htaccess') || strpos($lower_name, 'htaccess') || strpos($lower_name, '.config') || strpos($lower_name, '.css') || strpos($lower_name, '.js')) {
+			return false;
+		} else {
+			return strpos($name, '.') !== 0;
+		}
+	}
+}
+function access($attr, $path, $data, $volume, $isDir, $relpath) {
 	$basename = basename($path);
 	return $basename[0] === '.'                  // if file/folder begins with '.' (dot)
 			 && strlen($relpath) !== 1           // but with out volume root
 		? !($attr == 'read' || $attr == 'write') // set read+write to false, other (locked+hidden) set to true
 		:  null;                                 // else elFinder decide it itself
-}
 }
