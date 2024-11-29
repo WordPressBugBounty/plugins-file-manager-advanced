@@ -4,7 +4,7 @@
   Plugin URI: https://wordpress.org/plugins/file-manager-advanced
   Description: Cpanel for files management in wordpress
   Author: modalweb
-  Version: 5.2.10
+  Version: 5.2.11
   Author URI: https://advancedfilemanager.com
   License: GPLv2
 **/

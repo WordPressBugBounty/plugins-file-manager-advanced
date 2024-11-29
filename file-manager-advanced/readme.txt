@@ -2,9 +2,9 @@
 Contributors: modalweb,filemanager
 Tags: file manager, wordpress file manager, wp file manager, file manager pro, document management,file-manager, wp-filemanager, elfinder, wp-file-manager, ftp, filemanager
 Requires at least: 4.0
-Tested up to: 6.6.2
+Tested up to: 6.7.1
 Requires PHP: 7.0
-Stable tag: 5.2.10
+Stable tag: 5.2.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -111,6 +111,9 @@ Yes you can, go to settings, change root path.
 
 
 == Changelog ==
+
+= 5.2.11 (24th Nov, 2024) =
+* Fixed file sanitization issue
 
 = 5.2.10 (26th Sep, 2024) =
 * Broken Shortcode issue fixes

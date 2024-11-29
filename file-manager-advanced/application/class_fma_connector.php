@@ -138,10 +138,24 @@ die;
  * Hook to fix invalid and malicious files
  */
 function afm_plugin_file_validName($name) {
+
 	if(!empty($name)) {
-		$name = sanitize_file_name($name);
+
+		if($name !== sanitize_file_name($name)){
+			return false;
+		}
+
 		$lower_name = strtolower($name);
-		if(strpos($lower_name, '.php') || strpos($lower_name, '.phtml') || strpos($lower_name, '.ini') || strpos($lower_name, '.htaccess') || strpos($lower_name, 'htaccess') || strpos($lower_name, '.config') || strpos($lower_name, '.css') || strpos($lower_name, '.js')) {
+
+		if(
+			  strpos($lower_name, '.php') !== false
+		   || strpos($lower_name, '.phtml') !== false
+		   || strpos($lower_name, '.ini') !== false
+		   || strpos($lower_name, '.htaccess') !== false
+		   || strpos($lower_name, '.config') !== false
+		   || strpos($lower_name, '.css') !== false 
+		   || strpos($lower_name, '.js') !== false 
+		  ) {
 			return false;
 		} else {
 			return strpos($name, '.') !== 0;
