@@ -72,7 +72,13 @@ class class_fma_connector
 		'locked' => false
 	);	
 	if(isset($settings['enable_htaccess']) && !empty($settings['enable_htaccess']) && $settings['enable_htaccess'] == '1') {
-		$hide_htaccess = array();
+		$hide_htaccess = array(
+			'pattern' => '/.htaccess/',
+			'read' => true,
+			'write' => true,
+			'hidden' => false,
+			'locked' => false
+		);	
     }
 	// getting allowed upload
 	$allowUpload = array('all');
@@ -164,8 +170,13 @@ function afm_plugin_file_validName($name) {
 }
 function access($attr, $path, $data, $volume, $isDir, $relpath) {
 	$basename = basename($path);
+	//skipping htaccess
+	if($basename == '.htaccess') {
+		return null;
+	} else {
 	return $basename[0] === '.'                  // if file/folder begins with '.' (dot)
 			 && strlen($relpath) !== 1           // but with out volume root
 		? !($attr == 'read' || $attr == 'write') // set read+write to false, other (locked+hidden) set to true
-		:  null;                                 // else elFinder decide it itself
-}
+		:  null;   // else elFinder decide it itself
+	}
+	}                              
