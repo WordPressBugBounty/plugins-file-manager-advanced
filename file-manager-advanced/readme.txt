@@ -1,10 +1,10 @@
 === Advanced File Manager ===
-Contributors: modalweb,filemanager
+Contributors: wpexpertsio, saadiqbal
 Tags: file manager, wordpress file manager, wp file manager, file manager pro, document management,file-manager, wp-filemanager, elfinder, wp-file-manager, ftp, filemanager
 Requires at least: 4.0
-Tested up to: 6.7.1
+Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 5.2.12
+Stable tag: 5.2.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -111,6 +111,8 @@ Yes you can, go to settings, change root path.
 
 
 == Changelog ==
+= 5.2.13 (7th Dec, 2024) =
+* Changed plugin ownership
 
 = 5.2.12 (1st Dec, 2024) =
 * Fixed .htaccess visibility issue
