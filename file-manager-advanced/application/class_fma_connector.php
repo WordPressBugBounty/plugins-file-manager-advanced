@@ -75,7 +75,7 @@ class class_fma_connector
 		$hide_htaccess = array(
 			'pattern' => '/.htaccess/',
 			'read' => true,
-			'write' => true,
+			'write' => false,
 			'hidden' => false,
 			'locked' => false
 		);	
