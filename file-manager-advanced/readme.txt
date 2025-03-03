@@ -4,7 +4,7 @@ Tags: file manager, wordpress file manager, wp file manager, file manager pro, d
 Requires at least: 4.0
 Tested up to: 6.7.1
 Requires PHP: 7.0
-Stable tag: 5.2.14
+Stable tag: 5.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -350,6 +350,9 @@ Yes, the plugin offers multilingual support, which makes it suitable for website
 
 
 == Changelog ==
+= 5.3.0 - March 03, 2025 =
+* Fixed .svg sanitization issue
+
 = 5.2.14 - Jan 15, 2025 =
 * Fixed .htaccess visibility issue
 
