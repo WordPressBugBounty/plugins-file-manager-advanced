@@ -2,9 +2,9 @@
 Contributors: wpexpertsio, saadiqbal
 Tags: file manager, wordpress file manager, wp file manager, file manager pro, document management,file-manager, wp-filemanager, elfinder, wp-file-manager, ftp, filemanager
 Requires at least: 4.0
-Tested up to: 6.7.1
+Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 5.3.0
+Stable tag: 5.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -350,8 +350,16 @@ Yes, the plugin offers multilingual support, which makes it suitable for website
 
 
 == Changelog ==
+
+= 5.3.1 - May 05, 2025 =
+* Fixed compatibility issues with WordPress 6.8
+* Updated elFinder library to the latest version
+
 = 5.3.0 - March 03, 2025 =
+* New - Added Moono theme
+* Update - Some UI improvements
 * Fixed .svg sanitization issue
+* Security Fix - Stored Cross-Site Scripting via SVG File vulnerability reported by Wordfence(CVE-2024-13805).
 
 = 5.2.14 - Jan 15, 2025 =
 * Fixed .htaccess visibility issue

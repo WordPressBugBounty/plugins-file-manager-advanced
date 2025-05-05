@@ -44,7 +44,7 @@
     } );
 
     $( '.dropbox__wrap' ).on( 'click', function() {
-        file_manager_advanced_popup( '', 'Dropbox Integration<br />Coming Soon!', 'See more features' );
+        file_manager_advanced_popup( '', '', '' );
     } );
 
     function file_manager_advanced_popup( redirect_url = '', message = '', button_title = '' ) {

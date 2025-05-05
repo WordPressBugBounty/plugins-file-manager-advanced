@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * File Manager Version
  */
 if ( !defined('FMA_VERSION') ) {
-   define('FMA_VERSION', '5.3.0');
+   define( 'FMA_VERSION', '5.3.1' . time() );
 }
 /**
  * File Manager UI
@@ -31,6 +31,6 @@ if ( !defined('FMA_OPERATIONS') ) {
     define('FMA_OPERATIONS', ['mkdir', 'mkfile', 'rename', 'duplicate', 'paste', 'ban', 'archive', 'extract', 'copy', 'cut', 'edit','rm','download', 'upload', 'search', 'info', 'help','empty','resize','preference']);
 }
 
-if ( !defined('FMA_PLUGIN_URL') ) {
-    define('FMA_PLUGIN_URL', plugin_dir_url( __FILE__ ));
+if ( ! defined( 'FMA_PLUGIN_URL' ) ) {
+	define( 'FMA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 }

@@ -32,7 +32,7 @@ class elFinder
      *
      * @var integer
      */
-    protected static $ApiRevision = 62;
+    protected static $ApiRevision = 65;
 
     /**
      * Storages (root dirs)
@@ -1894,11 +1894,7 @@ class elFinder
                     }
                     $name .= '.' . $dlres['ext'];
                     $uniqid = uniqid();
-                    if(ZEND_THREAD_SAFE){
-						set_transient("zipdl$uniqid", basename($path),MINUTE_IN_SECONDS);
-					} else {
-						$this->session->set('zipdl' . $uniqid, basename($path));
-					}
+                    $this->session->set('zipdl' . $uniqid, basename($path));
                     $result = array(
                         'zipdl' => array(
                             'file' => $CriOS? basename($path) : $uniqid,
@@ -1924,18 +1920,12 @@ class elFinder
                 }
             }
             // data check
-            if (count($targets) !== 4 ||
-                ($volume = $this->volume($targets[0])) == false ||
-                !($file = $CriOS ? $targets[1] : ( ZEND_THREAD_SAFE ? get_transient( "zipdl$targets[1]" ) : $this->session->get( 'zipdl' . $targets[1] ) ) )) {
+            if (count($targets) !== 4 || ($volume = $this->volume($targets[0])) == false || !($file = $CriOS? $targets[1] : $this->session->get('zipdl' . $targets[1]))) {
                 return array('error' => 'File not found', 'header' => $h404, 'raw' => true);
             }
             $path = $volume->getTempPath() . DIRECTORY_SEPARATOR . basename($file);
             // remove session data of "zipdl..."
-	        if(ZEND_THREAD_SAFE){
-		        delete_transient("zipdl$targets[1]");
-	        } else {
-		        $this->session->remove('zipdl' . $targets[1]);
-	        }
+            $this->session->remove('zipdl' . $targets[1]);
             if (!$CriOSinit) {
                 // register auto delete on shutdown
                 $GLOBALS['elFinderTempFiles'][$path] = true;
@@ -2092,7 +2082,7 @@ class elFinder
         }
 
         if ($args['cpath'] && $args['reqid']) {
-            setcookie('elfdl' . $args['reqid'], '1', 0, urlencode($args['cpath']));
+            setcookie('elfdl' . $args['reqid'], '1', 0, $args['cpath']);
         }
 
         $result = array(
@@ -2214,10 +2204,6 @@ class elFinder
             return array('error' => $this->error(self::ERROR_INV_PARAMS, 'mkdir'));
         }
 
-        if (strpos($name,'..') !== false) {
-            return array('error' => $this->error('Invalid request', 'mkdir'));
-        }
-
         if (($volume = $this->volume($target)) == false) {
             return array('error' => $this->error(self::ERROR_MKDIR, $name, self::ERROR_TRGDIR_NOT_FOUND, '#' . $target));
         }
@@ -2230,9 +2216,6 @@ class elFinder
             $reset = null;
             $mkdirs = array();
             foreach ($dirs as $dir) {
-                if(strpos($dir,'..') !== false){
-                    return array('error' => $this->error('Invalid request', 'mkdir'));
-                }
                 $tgt =& $mkdirs;
                 $_names = explode('/', trim($dir, '/'));
                 foreach ($_names as $_key => $_name) {
@@ -2270,13 +2253,13 @@ class elFinder
     protected function mkfile($args)
     {
         $target = $args['target'];
-        $name = str_replace('..', '', $args['name']);
+        $name = $args['name'];
 
         if (($volume = $this->volume($target)) == false) {
             return array('error' => $this->error(self::ERROR_MKFILE, $name, self::ERROR_TRGDIR_NOT_FOUND, '#' . $target));
         }
 
-        return ($file = $volume->mkfile($target, $name)) == false
+        return ($file = $volume->mkfile($target, $args['name'])) == false
             ? array('error' => $this->error(self::ERROR_MKFILE, $name, $volume->error()))
             : array('added' => array($file));
     }
@@ -2308,9 +2291,6 @@ class elFinder
 
         if (!($volume = $this->volume($target))) {
             return array('error' => $this->error(self::ERROR_RENAME, '#' . $target, self::ERROR_FILE_NOT_FOUND));
-        }
-        if (strpos($name,'..') !== false) {
-            return array('error' => $this->error('Invalid request', 'rename'));
         }
 
         if ($targets) {
@@ -3909,10 +3889,6 @@ class elFinder
         $target = $args['target'];
         $makedir = isset($args['makedir']) ? (bool)$args['makedir'] : null;
 
-        if(strpos($target,'..') !== false){
-            return array('error' => $this->error(self::ERROR_EXTRACT, '#' . $target, self::ERROR_FILE_NOT_FOUND));
-        }
-        
         if (($volume = $this->volume($target)) == false
             || ($file = $volume->file($target)) == false) {
             return array('error' => $this->error(self::ERROR_EXTRACT, '#' . $target, self::ERROR_FILE_NOT_FOUND));
@@ -3945,21 +3921,12 @@ class elFinder
         $targets = isset($args['targets']) && is_array($args['targets']) ? $args['targets'] : array();
         $name = isset($args['name']) ? $args['name'] : '';
 
-        if(strpos($name,'..') !== false){
-            return $this->error('Invalid Request.', self::ERROR_TRGDIR_NOT_FOUND);
-        }
-
         $targets = array_filter($targets, array($this, 'volume'));
         if (!$targets || ($volume = $this->volume($targets[0])) === false) {
             return $this->error(self::ERROR_ARCHIVE, self::ERROR_TRGDIR_NOT_FOUND);
         }
 
         foreach ($targets as $target) {
-            $explodedStr = explode('l1_', $target);
-            $targetFolderName = base64_decode($explodedStr[1]);
-            if(strpos($targetFolderName,'..') !== false){
-                return $this->error('Invalid Request.', self::ERROR_TRGDIR_NOT_FOUND);
-            }
             $this->itemLock($target);
         }
 
