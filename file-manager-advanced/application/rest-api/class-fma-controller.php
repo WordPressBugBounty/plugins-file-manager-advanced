@@ -50,8 +50,8 @@ if ( ! class_exists( 'FMA_Controller' ) ) :
 				'/hide-banner',
 				array(
 					'methods'  => $wp_rest_server::CREATABLE,
+					'permission_callback' => array( $this, 'permission_callback' ),
 					'callback' => array( $this, 'hide_banner' ),
-					'permission_callback' => '__return_true',
 				)
 			);
 
@@ -60,11 +60,21 @@ if ( ! class_exists( 'FMA_Controller' ) ) :
 				'/minimize-maximize-banner',
 				array(
 					'methods'  => $wp_rest_server::CREATABLE,
+                    'permission_callback' => array( $this, 'permission_callback' ),
 					'callback' => array( $this, 'minimize_maximize_banner' ),
-					'permission_callback' => '__return_true',
 				)
 			);
 		}
+
+        /**
+         * Permission Callback
+         *
+         * @since 5.3.2
+         * @return bool
+         */
+        public function permission_callback() {
+            return is_user_logged_in() && current_user_can( 'manage_options' );
+        }
 
 		/**
 		 * Hide Banner

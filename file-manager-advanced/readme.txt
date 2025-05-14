@@ -4,7 +4,7 @@ Tags: file manager, wordpress file manager, wp file manager, file manager pro, d
 Requires at least: 4.0
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 5.3.1
+Stable tag: 5.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -198,16 +198,15 @@ Here are some of the compelling reasons to install the Advanced File Manager plu
 * File editing for quick changes.
 
 
-### ☁️ **Cloud Storage Apps Integration with WordPress [Coming Soon]**
+### ☁️ **Cloud Storage Apps Integration with WordPress**
 
 Soon, you will be able to integrate your favorite cloud storage app with WordPress to manage files and document libraries. The list of cloud storage apps is as follows:
 
-* OneDrive
+* DropBox
 
-* Google Drive
+* OneDrive (Coming Soon)
 
-* Amazon Simple Storage Service (S3), etc.
-
+* Google Drive (Coming Soon)
 
 ### 🤝 **Compatibility** 
 
@@ -333,6 +332,9 @@ Yes in the pro version of the plugin, you can toggle between grid view and list 
 = Does the plugin support multilingual sites? =
 Yes, the plugin offers multilingual support, which makes it suitable for websites with global audiences.
 
+= How can I report security bugs? =
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/9e5fbcf7-66cb-41b1-8058-11dc31b6b131)
+
 
 == Screenshots ==
 
@@ -350,6 +352,10 @@ Yes, the plugin offers multilingual support, which makes it suitable for website
 
 
 == Changelog ==
+
+= 5.3.2 - May 14, 2025 =
+* Fixed - Vulnerability reported by the Patchstack team.
+* Fixed - Issue related to adding backslashes when saving the file in file content.
 
 = 5.3.1 - May 05, 2025 =
 * Fixed compatibility issues with WordPress 6.8
