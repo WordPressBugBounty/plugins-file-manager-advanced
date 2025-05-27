@@ -535,3 +535,51 @@ td .afm__placeholder {
     float: right;
     margin-right: 20px;
 }
+
+/*
+===============================================
+File Manager File Logs
+===============================================
+*/
+.dropbox__heading,
+.filelogs__heading {
+    color: #000;
+    font-size: 18px !important;
+    font-style: normal;
+    font-weight: 600 !important;
+    line-height: normal;
+}
+
+.filelogs__heading {
+    margin-bottom: 25px !important;
+}
+
+.dropbox__heading-pro-tag,
+.filelogs__heading-pro-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: linear-gradient(270deg, #011D33 0%, #3F6972 100%);
+    border-radius: 4px;
+    color: #fff;
+    font-size: 12px;
+    margin-left: 25px;
+}
+
+.file-logs__wrap,
+.dropbox__wrap {
+    opacity: 0.5;
+    position:relative;
+}
+
+.file-logs__wrap::before,
+.dropbox__wrap::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: transparent;
+}

@@ -51,6 +51,10 @@ class class_fma_admin_menus {
         if ( ! class_exists( 'AFMP\\Modules\\Dropbox' ) ) {
             add_submenu_page( 'file_manager_advanced_ui', 'Dropbox Settings', 'Dropbox', 'manage_options', 'afmp-dropbox', array( $this, 'dropbox_menu'  ) );
         }
+
+        if ( ! class_exists( 'AFMP\\Modules\\FileLogs' ) ) {
+            add_submenu_page( 'file_manager_advanced_ui', 'File Logs', 'File Logs', 'manage_options', 'afmp-file-logs', array( $this, 'afmp__file_logs' ), 2 );
+        }
 	}
 
 	/**
@@ -59,42 +63,7 @@ class class_fma_admin_menus {
 	 */
     public function dropbox_menu() {
 
-        echo '<style type="text/css">
-            .dropbox__heading {
-                color: #000;
-                font-size: 18px;
-                font-style: normal;
-                font-weight: 600;
-                line-height: normal;
-            }
-            
-            .dropbox__heading-pro-tag {
-                display: inline-block;
-                padding: 2px 8px;
-                background: linear-gradient(270deg, #011D33 0%, #3F6972 100%);
-                border-radius: 4px;
-                color: #fff;
-                font-size: 12px;
-                margin-left: 25px;
-            }
-            
-            .dropbox__wrap {
-                opacity: 0.5;
-                position:relative;
-            }
-            
-            .dropbox__wrap::before {
-                content: "";
-                display: block;
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                top: 0;
-                left: 0;
-                z-index: 1;
-                background: transparent;
-            }
-        </style>
+        echo '
         <h2 class="dropbox__heading">Dropbox Settings <span class="dropbox__heading-pro-tag">PRO</span></h2>
 
         <div class="dropbox__wrap">
@@ -172,6 +141,100 @@ class class_fma_admin_menus {
 	public function adminer_menu() {
 		require_once FMAFILEPATH . 'templates/adminer.php';
 	}
+
+    public function afmp__file_logs() {
+        echo <<<HTML
+<div class="wrap">
+
+<h2 class="filelogs__heading">File Logs <span class="filelogs__heading-pro-tag">PRO</span></h2>
+
+
+<div class="file-logs__wrap" afmp-href="https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=file_log_banner&utm_campaign=plugin">
+<div class="afma-datatable-header"><a class="button button-secondary" href="#" style="float: right;">Delete All</a><form method="get">
+					
+					<input type="hidden" name="page" value="afmp-file-logs">
+				    <input type="hidden" name="_wpnonce" value="449f66b7cf">
+					
+					<select name="filter" id="filter" class="afmp__select">
+						<option value="all">All</option><option value="renamed">Renamed</option><option value="duplicated">Duplicated</option><option value="uploaded">Uploaded</option><option value="created">Created</option><option value="deleted">Deleted</option><option value="pasted">Pasted</option><option value="updated">Updated</option>
+					</select>
+					
+					<input type="text" name="date-range" id="date-range" class="afmp__input" autocomplete="off" value="" placeholder="Date Range">
+					
+					<input type="submit" class="button button-secondary" value="Filter">
+				</form></div><table class="wp-list-table widefat fixed striped table-view-list ">
+			<thead>
+	<tr>
+		<th scope="col" id="id" class="manage-column column-id column-primary sortable asc"><a href="#"><span>ID</span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span> <span class="screen-reader-text">Sort descending.</span></a></th><th scope="col" id="user_name" class="manage-column column-user_name sortable desc"><a href="https://file-manager-advanced.test/wp-admin/admin.php?page=afmp-file-logs&amp;orderby=user_id&amp;order=asc"><span>User</span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span> <span class="screen-reader-text">Sort ascending.</span></a></th><th scope="col" id="time" class="manage-column column-time sortable asc"><a href="#"><span>Date &amp; Time</span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span> <span class="screen-reader-text">Sort descending.</span></a></th><th scope="col" id="action" class="manage-column column-action sortable asc"><a href="#"><span>Event</span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span> <span class="screen-reader-text">Sort descending.</span></a></th><th scope="col" id="file_path" class="manage-column column-file_path sortable asc"><a href="#"><span>File Path</span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span> <span class="screen-reader-text">Sort descending.</span></a></th><th scope="col" id="type" class="manage-column column-type sortable asc"><a href="#"><span>Type</span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span> <span class="screen-reader-text">Sort descending.</span></a></th><th scope="col" id="ip" class="manage-column column-ip sortable asc"><a href="#"><span>IP Address</span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span> <span class="screen-reader-text">Sort descending.</span></a></th><th scope="col" id="actions" class="manage-column column-actions">Actions</th>	</tr>
+	</thead>
+
+	<tbody id="the-list">
+		<tr><td class="id column-id has-row-actions column-primary" data-colname="ID">6<button type="button" class="toggle-row"><span class="screen-reader-text">Show more details</span></button></td><td class="user_name column-user_name" data-colname="User">admin<br>john@flywheel.local</td><td class="time column-time" data-colname="Date &amp; Time">May 02, 2025 12:40 pm</td><td class="action column-action" data-colname="Event">uploaded</td><td class="file_path column-file_path" data-colname="File Path">D:\Local Sites\file-manager-advanced\app\public\wp-content\HeidiSQL.lnk</td><td class="type column-type" data-colname="Type">application/x-ms-shortcut</td><td class="ip column-ip" data-colname="IP Address">127.0.0.1</td><td class="actions column-actions" data-colname="Actions"><div>
+				<a class="afmp-show-details" afmp-details="The User ***(admin)*** with IP Address ***(127.0.0.1)*** has just ***(uploaded)*** the file ***(D:\Local Sites\file-manager-advanced\app\public\wp-content\HeidiSQL.lnk)*** of type ***(application/x-ms-shortcut)*** on ***(May 02, 2025 12:40 pm)*** using File Manager on website ***(https://file-manager-advanced.test)***" href="#">
+					<span class="dashicons dashicons-visibility"></span>
+				</a>
+				<a href="#" onclick="return confirm( 'Are you sure you want to delete this file log?' )">
+					<span class="dashicons dashicons-trash"></span>
+				</a>
+			</div></td></tr><tr><td class="id column-id has-row-actions column-primary" data-colname="ID">5<button type="button" class="toggle-row"><span class="screen-reader-text">Show more details</span></button></td><td class="user_name column-user_name" data-colname="User">admin<br>john@flywheel.local</td><td class="time column-time" data-colname="Date &amp; Time">May 02, 2025 12:39 pm</td><td class="action column-action" data-colname="Event">pasted</td><td class="file_path column-file_path" data-colname="File Path">D:\Local Sites\file-manager-advanced\app\public\wp-content\index.php</td><td class="type column-type" data-colname="Type">text/x-php</td><td class="ip column-ip" data-colname="IP Address">127.0.0.1</td><td class="actions column-actions" data-colname="Actions"><div>
+				<a class="afmp-show-details" afmp-details="The User ***(admin)*** with IP Address ***(127.0.0.1)*** has just ***(pasted)*** the file ***(D:\Local Sites\file-manager-advanced\app\public\wp-content\index.php)*** of type ***(text/x-php)*** on ***(May 02, 2025 12:39 pm)*** using File Manager on website ***(https://file-manager-advanced.test)***" href="#">
+					<span class="dashicons dashicons-visibility"></span>
+				</a>
+				<a href="#" onclick="return confirm( 'Are you sure you want to delete this file log?' )">
+					<span class="dashicons dashicons-trash"></span>
+				</a>
+			</div></td></tr><tr><td class="id column-id has-row-actions column-primary" data-colname="ID">4<button type="button" class="toggle-row"><span class="screen-reader-text">Show more details</span></button></td><td class="user_name column-user_name" data-colname="User">admin<br>john@flywheel.local</td><td class="time column-time" data-colname="Date &amp; Time">May 02, 2025 12:39 pm</td><td class="action column-action" data-colname="Event">deleted</td><td class="file_path column-file_path" data-colname="File Path">D:\Local Sites\file-manager-advanced\app\public\wp-content\themes\deletedme.php</td><td class="type column-type" data-colname="Type">text/x-php</td><td class="ip column-ip" data-colname="IP Address">127.0.0.1</td><td class="actions column-actions" data-colname="Actions"><div>
+				<a class="afmp-show-details" afmp-details="The User ***(admin)*** with IP Address ***(127.0.0.1)*** has just ***(deleted)*** the file ***(D:\Local Sites\file-manager-advanced\app\public\wp-content\themes\deletedme.php)*** of type ***(text/x-php)*** on ***(May 02, 2025 12:39 pm)*** using File Manager on website ***(https://file-manager-advanced.test)***" href="#">
+					<span class="dashicons dashicons-visibility"></span>
+				</a>
+				<a href="#" onclick="return confirm( 'Are you sure you want to delete this file log?' )">
+					<span class="dashicons dashicons-trash"></span>
+				</a>
+			</div></td></tr><tr><td class="id column-id has-row-actions column-primary" data-colname="ID">3<button type="button" class="toggle-row"><span class="screen-reader-text">Show more details</span></button></td><td class="user_name column-user_name" data-colname="User">admin<br>john@flywheel.local</td><td class="time column-time" data-colname="Date &amp; Time">May 02, 2025 12:39 pm</td><td class="action column-action" data-colname="Event">updated</td><td class="file_path column-file_path" data-colname="File Path">D:\Local Sites\file-manager-advanced\app\public\wp-content\themes\deletedme.php</td><td class="type column-type" data-colname="Type">text/x-php</td><td class="ip column-ip" data-colname="IP Address">127.0.0.1</td><td class="actions column-actions" data-colname="Actions"><div>
+				<a class="afmp-show-details" afmp-details="The User ***(admin)*** with IP Address ***(127.0.0.1)*** has just ***(updated)*** the file ***(D:\Local Sites\file-manager-advanced\app\public\wp-content\themes\deletedme.php)*** of type ***(text/x-php)*** on ***(May 02, 2025 12:39 pm)*** using File Manager on website ***(https://file-manager-advanced.test)***" href="#">
+					<span class="dashicons dashicons-visibility"></span>
+				</a>
+				<a href="#" onclick="return confirm( 'Are you sure you want to delete this file log?' )">
+					<span class="dashicons dashicons-trash"></span>
+				</a>
+			</div></td></tr><tr><td class="id column-id has-row-actions column-primary" data-colname="ID">2<button type="button" class="toggle-row"><span class="screen-reader-text">Show more details</span></button></td><td class="user_name column-user_name" data-colname="User">admin<br>john@flywheel.local</td><td class="time column-time" data-colname="Date &amp; Time">May 02, 2025 12:39 pm</td><td class="action column-action" data-colname="Event">renamed</td><td class="file_path column-file_path" data-colname="File Path">D:\Local Sites\file-manager-advanced\app\public\wp-content\themes\index copy 1.php</td><td class="type column-type" data-colname="Type">text/x-php</td><td class="ip column-ip" data-colname="IP Address">127.0.0.1</td><td class="actions column-actions" data-colname="Actions"><div>
+				<a class="afmp-show-details" afmp-details="The User ***(admin)*** with IP Address ***(127.0.0.1)*** has just ***(renamed)*** the file ***(D:\Local Sites\file-manager-advanced\app\public\wp-content\themes\index copy 1.php)*** of type ***(text/x-php)*** on ***(May 02, 2025 12:39 pm)*** using File Manager on website ***(https://file-manager-advanced.test)***" href="#">
+					<span class="dashicons dashicons-visibility"></span>
+				</a>
+				<a href="#" onclick="return confirm( 'Are you sure you want to delete this file log?' )">
+					<span class="dashicons dashicons-trash"></span>
+				</a>
+			</div></td></tr><tr><td class="id column-id has-row-actions column-primary" data-colname="ID">1<button type="button" class="toggle-row"><span class="screen-reader-text">Show more details</span></button></td><td class="user_name column-user_name" data-colname="User">admin<br>john@flywheel.local</td><td class="time column-time" data-colname="Date &amp; Time">May 02, 2025 12:38 pm</td><td class="action column-action" data-colname="Event">duplicated</td><td class="file_path column-file_path" data-colname="File Path">D:\Local Sites\file-manager-advanced\app\public\wp-content\themes\index copy 1.php</td><td class="type column-type" data-colname="Type">text/x-php</td><td class="ip column-ip" data-colname="IP Address">127.0.0.1</td><td class="actions column-actions" data-colname="Actions"><div>
+				<a class="afmp-show-details" afmp-details="The User ***(admin)*** with IP Address ***(127.0.0.1)*** has just ***(duplicated)*** the file ***(D:\Local Sites\file-manager-advanced\app\public\wp-content\themes\index copy 1.php)*** of type ***(text/x-php)*** on ***(May 02, 2025 12:38 pm)*** using File Manager on website ***(https://file-manager-advanced.test)***" href="#">
+					<span class="dashicons dashicons-visibility"></span>
+				</a>
+				<a href="#" onclick="return confirm( 'Are you sure you want to delete this file log?' )">
+					<span class="dashicons dashicons-trash"></span>
+				</a>
+			</div></td></tr>	</tbody>
+
+	<tfoot>
+	<tr>
+		<th scope="col" class="manage-column column-id column-primary sortable asc"><a href="#"><span>ID</span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span> <span class="screen-reader-text">Sort descending.</span></a></th><th scope="col" class="manage-column column-user_name sortable desc"><a href="https://file-manager-advanced.test/wp-admin/admin.php?page=afmp-file-logs&amp;orderby=user_id&amp;order=asc"><span>User</span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span> <span class="screen-reader-text">Sort ascending.</span></a></th><th scope="col" class="manage-column column-time sortable asc"><a href="#"><span>Date &amp; Time</span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span> <span class="screen-reader-text">Sort descending.</span></a></th><th scope="col" class="manage-column column-action sortable asc"><a href="#"><span>Event</span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span> <span class="screen-reader-text">Sort descending.</span></a></th><th scope="col" class="manage-column column-file_path sortable asc"><a href="#"><span>File Path</span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span> <span class="screen-reader-text">Sort descending.</span></a></th><th scope="col" class="manage-column column-type sortable asc"><a href="#"><span>Type</span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span> <span class="screen-reader-text">Sort descending.</span></a></th><th scope="col" class="manage-column column-ip sortable asc"><a href="#"><span>IP Address</span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span> <span class="screen-reader-text">Sort descending.</span></a></th><th scope="col" class="manage-column column-actions">Actions</th>	</tr>
+	</tfoot>
+
+</table>
+		<div class="afma-datatable-header">	<div class="tablenav bottom">
+
+				<div class="alignleft actions bulkactions">
+					</div>
+			<div class="tablenav-pages one-page"><span class="displaying-num">6 items</span>
+<span class="pagination-links"><span class="tablenav-pages-navspan button disabled" aria-hidden="true">«</span>
+<span class="tablenav-pages-navspan button disabled" aria-hidden="true">‹</span>
+<span class="screen-reader-text">Current Page</span><span id="table-paging" class="paging-input"><span class="tablenav-paging-text">1 of <span class="total-pages">1</span></span></span>
+<span class="tablenav-pages-navspan button disabled" aria-hidden="true">›</span>
+<span class="tablenav-pages-navspan button disabled" aria-hidden="true">»</span></span></div>
+		<br class="clear">
+	</div>
+		</div></div></div>
+HTML;
+
+    }
 
 	/** 
 	 * Fma permissions

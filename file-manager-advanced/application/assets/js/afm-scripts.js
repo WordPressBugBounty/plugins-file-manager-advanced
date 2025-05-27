@@ -43,8 +43,14 @@
         ).catch( error => console.error( 'Error:', error ) );
     } );
 
-    $( '.dropbox__wrap' ).on( 'click', function() {
-        file_manager_advanced_popup( '', '', '' );
+    $( '.dropbox__wrap, .file-logs__wrap' ).on( 'click', function() {
+
+        var redirect_url = $( this ).attr( 'afmp-href' );
+        if ( ! redirect_url ) {
+            redirect_url = '';
+        }
+
+        file_manager_advanced_popup( redirect_url, '', '' );
     } );
 
     function file_manager_advanced_popup( redirect_url = '', message = '', button_title = '' ) {

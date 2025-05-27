@@ -10,6 +10,8 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 
+<h2 class="dropbox__heading">DB Access <span class="dropbox__heading-pro-tag">PRO</span></h2>
+
 <div class="afm__adminer-wrapper">
     <div class="afm__sidebar">
         <div class="afm__container">
@@ -38,7 +40,7 @@ defined( 'ABSPATH' ) || exit;
 
                 <?php $counter = 0; ?>
                 <?php $reset_on_3 = 0; ?>
-                <?php while ( $counter <= 25 ) : ?>
+                <?php while ( $counter <= 5 ) : ?>
 
                     <?php if ( $reset_on_3 < 4 ) : ?>
                         <div class="afm__m-5 afm__placeholder afm__placeholder-primary-gradient"></div>
@@ -92,7 +94,7 @@ defined( 'ABSPATH' ) || exit;
                 
                 <table class="afm__table-wrapper">
                     <?php $counter = 0; ?>
-                    <?php while ( $counter < 20 ) : ?>
+                    <?php while ( $counter < 5 ) : ?>
 
                         <tr class="<?php echo ! $counter ? 'afm__table-header' : 'fma__table--content' ?> afm__table-row">
                             <td style="width: 3%;">
@@ -168,12 +170,12 @@ defined( 'ABSPATH' ) || exit;
     </div>
 </div>
 
-<div class="fma__pro-popup" id="fma__pro_popup">
+<div class="fma__pro-popup" style="display: none;" id="fma__pro_popup">
     <div class="fma__pro-popup-wrapper">
 
         <div class="fma__pro-close-button">
             <a id="close-popup-btn" href="#">
-                <img src="${afmAdmin.assetsURL}images/close-popup.svg" alt="">
+                <img src="<?php echo plugin_dir_url( __FILE__ ) ?>../application/assets/images/close-popup.svg" alt="">
             </a>
         </div>
 
@@ -201,3 +203,17 @@ defined( 'ABSPATH' ) || exit;
 
     </div>
 </div>
+
+<script>
+    jQuery( document ).ready( function() {
+
+        jQuery( '.dropbox__heading, .afm__adminer-wrapper' ).on( 'click', function() {
+            jQuery( '#fma__pro_popup' ).show();
+        } );
+
+        jQuery( '#close-popup-btn' ).on( 'click', function( e ) {
+            e.preventDefault();
+            jQuery( '#fma__pro_popup' ).hide();
+        } );
+    } );
+</script>

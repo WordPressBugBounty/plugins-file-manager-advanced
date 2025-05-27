@@ -1,16 +1,18 @@
-=== Advanced File Manager — Ultimate WordPress File Manager and Document Library Plugin ===
+=== Advance File Manager - Ultimate File Manager And Document Library ===
 Contributors: wpexpertsio, saadiqbal
-Tags: file manager, wordpress file manager, wp file manager, file manager pro, document management,file-manager, wp-filemanager, elfinder, wp-file-manager, ftp, filemanager
+Tags: file-manager, wp-file-manager, document management, ftp, advance-file-manager
 Requires at least: 4.0
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 5.3.2
+Stable tag: 5.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Use Advanced File Manager to manage WordPress files, create archives, and build document libraries—all directly from your WordPress dashboard!
 
 == Description ==
+
+[Buy Pro](https://advancedfilemanager.com/pricing/?utm_source=wp_org&utm_medium=readme&utm_campaign=buy_now) | [Live Demo](https://filemanageradvanced-demo.instawp.xyz/?utm_source=wp_org&utm_medium=readme&utm_campaign=live_demo) | [Documentation](https://advancedfilemanager.com/documentation/?utm_source=wp_org&utm_medium=readme&utm_campaign=documentation) | [Support](https://objectsws.atlassian.net/servicedesk/customer/portal/37)
 
 **Manage WordPress files and create document libraries with ease!**
 
@@ -352,6 +354,8 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+= 5.3.3 - May 27, 2025 =
+* Fixed - Issue related to adding backslashes when saving the file in file content.
 
 = 5.3.2 - May 14, 2025 =
 * Fixed - Vulnerability reported by the Patchstack team.

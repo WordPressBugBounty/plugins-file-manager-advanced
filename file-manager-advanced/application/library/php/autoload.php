@@ -2,6 +2,9 @@
 
 define('ELFINDER_PHP_ROOT_PATH', dirname(__FILE__));
 
+// fix conflict with other similar functions
+
+if(!function_exists('elFinderAutoloader')) {
 function elFinderAutoloader($name)
 {
     $map = array(
@@ -46,6 +49,7 @@ function elFinderAutoloader($name)
         }
     }
     return false;
+}
 }
 
 if (version_compare(PHP_VERSION, '5.3', '<')) {
