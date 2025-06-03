@@ -55,6 +55,10 @@ class class_fma_admin_menus {
         if ( ! class_exists( 'AFMP\\Modules\\FileLogs' ) ) {
             add_submenu_page( 'file_manager_advanced_ui', 'File Logs', 'File Logs', 'manage_options', 'afmp-file-logs', array( $this, 'afmp__file_logs' ), 2 );
         }
+        
+        if ( ! class_exists( 'AFMP\\Modules\\GoogleDrive' ) ) {
+            add_submenu_page( 'file_manager_advanced_ui', 'Google Drive Settings', 'Google Drive', 'manage_options', 'afmp-googledrive', array( $this, 'googledrive_menu'  ) );
+        }
 	}
 
 	/**
@@ -123,6 +127,133 @@ class class_fma_admin_menus {
                         <p class="desc">
                             <strong>
                                 Copy this URL and paste it in your Dropbox App Console under Redirect URIs
+                            </strong>
+                        </p>
+                    </td>
+                </tr>
+            </table>';
+
+        submit_button();
+
+        echo '</div>';
+    }
+
+	/**
+	 * Google Drive menu
+	 * @since 6.7.2
+	 */
+    public function googledrive_menu() {
+
+        echo '<style type="text/css">
+            .googledrive__heading {
+                color: #000;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+            }
+            
+            .googledrive__heading-pro-tag {
+                display: inline-block;
+                padding: 2px 8px;
+                background: linear-gradient(270deg, #011D33 0%, #3F6972 100%);
+                border-radius: 4px;
+                color: #fff;
+                font-size: 12px;
+                margin-left: 25px;
+            }
+            
+            .googledrive__wrap {
+                opacity: 0.5;
+                position:relative;
+            }
+            
+            .googledrive__wrap::before {
+                content: "";
+                display: block;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 1;
+                background: transparent;
+            }
+        </style>
+        <h2 class="googledrive__heading">Google Drive Settings <span class="googledrive__heading-pro-tag">PRO</span></h2>
+
+        <div class="googledrive__wrap">
+            <table class="form-table">
+                <tr>
+                    <th>
+                        <lable for="fma__enable">Enable</lable>
+                    </th>
+                    <td>
+                        <input type="checkbox" id="fma__enable">
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th>
+                        <label for="afm__alias">Alias</label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__alias" value="" class="regular-text">
+                        <p class="desc">
+                            <strong>Enter a title which will be displayed on File Manager</strong>
+                        </p>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th>
+                        <label for="afm__app_key">App Key</label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__app_key" class="regular-text">
+                        <p class="desc">
+                            <strong>Enter your Google Drive App key, you will get your app key from <a href="#">Google Drive App Console</a></strong>
+                        </p>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th>
+                        <label for="afm__app_secret">App Secret</label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__app_secret" class="regular-text">
+                        <p class="desc">
+                            <strong>Enter your Google Drive App secret, you will get your app secret from <a href="#">Google Drive App Console</a></strong>
+                        </p>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th>
+                        <label for="afm__redirect_url">Javascript Origin</label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__redirect_uri" class="regular-text">
+                        
+                        <p class="desc">
+                            <strong>
+                                Copy this URL and paste it in your Google Drive App Console under JavaScripts Origins
+                            </strong>
+                        </p>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th>
+                        <label for="afm__redirect_url">Redirect URL</label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__redirect_uri" class="regular-text">
+                        
+                        <p class="desc">
+                            <strong>
+                                Copy this URL and paste it in your Google Drive App Console under Redirect URIs
                             </strong>
                         </p>
                     </td>

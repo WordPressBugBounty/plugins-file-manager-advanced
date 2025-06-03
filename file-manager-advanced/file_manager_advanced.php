@@ -4,7 +4,7 @@
   Plugin URI: https://wordpress.org/plugins/file-manager-advanced
   Description: Cpanel for files management in wordpress
   Author: wpexpertsio
-  Version: 5.3.3
+  Version: 5.3.4
   Author URI: https://wpexperts.io
   License: GPLv2
 **/

@@ -4,7 +4,7 @@ Tags: file-manager, wp-file-manager, document management, ftp, advance-file-mana
 Requires at least: 4.0
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 5.3.3
+Stable tag: 5.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,8 +74,6 @@ Whether you are a developer managing large files or a casual user needing basic 
 ✅ **Image and File Editing:** Edit images and files directly within the plugin, making quick changes without needing additional tools.
 
 ✅ **File Sanitization and UTF-8 Normalization:** Ensure proper file naming and avoid errors with built-in sanitization and UTF-8 normalization of file names and paths.
-
-✅ **File Browsing History:** Navigate through your file browsing history to quickly return to previously accessed folders and files.
 
 ✅ **High-Performance Backend**: The plugin offers a high-performance server backend that ensures smooth and fast file operations.
 
@@ -204,13 +202,13 @@ Here are some of the compelling reasons to install the Advanced File Manager plu
 
 Soon, you will be able to integrate your favorite cloud storage app with WordPress to manage files and document libraries. The list of cloud storage apps is as follows:
 
-* DropBox
+* [DropBox](https://advancedfilemanager.com/pricing/?utm_source=wp_org&utm_medium=readme&utm_campaign=dropbox)
+
+* [Google Drive](https://advancedfilemanager.com/pricing/?utm_source=wp_org&utm_medium=readme&utm_campaign=google_drive)
 
 * OneDrive (Coming Soon)
 
-* Google Drive (Coming Soon)
-
-### 🤝 **Compatibility** 
+### 🤝 **Compatibility**
 
 Advanced File Manager plugin works perfectly with all popular WordPress themes, plugins, and website builders.
 
@@ -266,7 +264,7 @@ Using the Advanced File Manager plugin is straightforward. Here’s a step-by-st
 
 * Enable or disable features based on your workflow requirements.
 
-By following these simple steps, you can fully leverage the Advanced File Manager plugin to manage your WordPress site’s files efficiently. 
+By following these simple steps, you can fully leverage the Advanced File Manager plugin to manage your WordPress site’s files efficiently.
 
 
 == Technical Documentation ==
@@ -289,7 +287,7 @@ Whether you face issues with uploading files, customizing settings, or need guid
 Yes, you can access folders outside the WordPress root directory. Just go to the plugin settings and modify the root path as needed.
 
 
-= Can I create a ZIP archive of any folder or file and download it? = 
+= Can I create a ZIP archive of any folder or file and download it? =
 Yes, you can archive any file or folder as a ZIP directly from the plugin interface and download it instantly.
 
 = Does the plugin work like an FTP client? =
@@ -354,6 +352,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+= 5.3.4 - June 3, 2025 =
+* Tweak - Added demo screen.
+
 = 5.3.3 - May 27, 2025 =
 * Fixed - Issue related to adding backslashes when saving the file in file content.
 

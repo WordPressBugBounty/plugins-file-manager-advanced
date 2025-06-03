@@ -53,6 +53,14 @@
         file_manager_advanced_popup( redirect_url, '', '' );
     } );
 
+    $( '.googledrive__wrap' ).on( 'click', function() {
+        file_manager_advanced_popup( 
+			'https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=google_drive_banner&utm_campaign=plugin',
+			'',
+			''
+		);
+    } );
+
     function file_manager_advanced_popup( redirect_url = '', message = '', button_title = '' ) {
         if ( ! redirect_url.length ) {
             redirect_url = 'https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=dropbox_banner&utm_campaign=plugin';

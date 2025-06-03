@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * File Manager Version
  */
 if ( !defined('FMA_VERSION') ) {
-   define( 'FMA_VERSION', '5.3.3' );
+   define( 'FMA_VERSION', '5.3.4' );
 }
 /**
  * File Manager UI
