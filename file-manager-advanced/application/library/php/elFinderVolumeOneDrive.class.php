@@ -980,7 +980,11 @@ class elFinderVolumeOneDrive extends elFinderVolumeDriver
                 if (empty($this->options['netkey'])) {
                     if ($this->aTokenFile) {
                         if (is_file($this->aTokenFile)) {
-                            $this->token = json_decode(file_get_contents($this->aTokenFile));
+
+                            if ( empty( $this->token ) ) {
+                                $this->token = json_decode(file_get_contents($this->aTokenFile));
+                            }
+
                             if (!is_object($this->token)) {
                                 unlink($this->aTokenFile);
                                 throw new Exception('Required option `accessToken` is invalid JSON.');

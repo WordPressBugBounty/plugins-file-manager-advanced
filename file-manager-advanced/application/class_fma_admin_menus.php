@@ -58,6 +58,10 @@ class class_fma_admin_menus {
         
         if ( ! class_exists( 'AFMP\\Modules\\GoogleDrive' ) ) {
             add_submenu_page( 'file_manager_advanced_ui', 'Google Drive Settings', 'Google Drive', 'manage_options', 'afmp-googledrive', array( $this, 'googledrive_menu'  ) );
+		}
+		
+        if ( ! class_exists( 'AFMP\Modules\Onedrive' ) ) {
+            add_submenu_page( 'file_manager_advanced_ui', 'OneDrive Settings', 'OneDrive', 'manage_options', 'afmp-onedrive', array( $this, 'onedrive_menu'  ) );
         }
 	}
 
@@ -132,6 +136,111 @@ class class_fma_admin_menus {
                     </td>
                 </tr>
             </table>';
+
+        submit_button();
+
+        echo '</div>';
+    }
+
+    /**
+     * OneDrive menu
+     * @since 6.7.3
+     */
+    public function onedrive_menu() {
+
+        echo '<style>
+            .onedrive__heading {
+                color: #000;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+            }
+            
+            .onedrive__heading-pro-tag {
+                display: inline-block;
+                padding: 2px 8px;
+                background: linear-gradient(270deg, #011D33 0%, #3F6972 100%);
+                border-radius: 4px;
+                color: #fff;
+                font-size: 12px;
+                margin-left: 25px;
+            }
+            
+            .onedrive__wrap {
+                opacity: 0.5;
+                position:relative;
+            }
+            
+            .onedrive__wrap::before {
+                content: "";
+                display: block;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 1;
+                background: transparent;
+            }
+        </style>';
+
+        echo '<h2 class="onedrive__heading">One Drive Settings <span class="onedrive__heading-pro-tag">PRO</span></h2>';
+        echo '<div class="onedrive__wrap" afmp-href="">';
+        echo '<h2></h2>';
+        echo '<table class="form-table" role="presentation">
+				<tbody>
+					<tr>
+						<th scope="row">
+							<label for="onedrive-enable">Enable</label>
+						</th>
+						<td>
+							<input type="checkbox" name="afmp__onedrive_settings[enable]" id="onedrive-enable" value="yes">
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="onedrive-alias">Alias</label>
+						</th>
+						<td>
+							<input class="regular-text" type="text" name="afmp__onedrive_settings[title]" id="onedrive-alias" value=""><p class="desc"><strong>Enter a title which will be displayed on File Manager</strong></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="onedrive-app-id">Application (client) ID</label>
+						</th>
+						<td>
+							<input class="regular-text" type="text" name="afmp__onedrive_settings[app_id]" id="onedrive-app-id" value="">
+							<p class="desc">
+								<strong>Enter your OneDrive Application (client) ID from your <a href="#">Azure AD app registration.</a></strong>
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="onedrive-app-secret">Client secret</label>
+						</th>
+						<td>
+							<input class="regular-text" type="text" name="afmp__onedrive_settings[app_secret]" id="onedrive-app-secret" value="">
+							<p class="desc">
+								<strong>Enter your OneDrive Client secret from your <a href="#">Azure AD app registration.</a></strong>
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="onedrive-redirect-uri">Redirect URI</label>
+						</th>
+						<td>
+							<input class="regular-text" type="text" name="afmp__onedrive_settings[redirect_uri]" id="onedrive-redirect-uri" value="">
+							<p class="desc">
+								<strong>Copy this URL and paste it in your Azure AD app registration under Redirect URIs.</strong>
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>';
 
         submit_button();
 

@@ -60,6 +60,9 @@
 			''
 		);
     } );
+    $( '.dropbox__wrap, .onedrive__wrap' ).on( 'click', function() {
+        file_manager_advanced_popup( '', '', '' );
+    } );
 
     function file_manager_advanced_popup( redirect_url = '', message = '', button_title = '' ) {
         if ( ! redirect_url.length ) {
