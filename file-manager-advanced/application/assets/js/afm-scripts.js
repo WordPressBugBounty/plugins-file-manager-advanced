@@ -43,7 +43,7 @@
         ).catch( error => console.error( 'Error:', error ) );
     } );
 
-    $( '.dropbox__wrap, .file-logs__wrap' ).on( 'click', function() {
+    $( '.dropbox__wrap, .file-logs__wrap, .fma__wrap' ).on( 'click', function() {
 
         var redirect_url = $( this ).attr( 'afmp-href' );
         if ( ! redirect_url ) {

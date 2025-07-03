@@ -1,3 +1,15 @@
+.afmp-nav-tabs .nav-tab-active {
+    background: #ffffff !important;
+}
+
+.afmp-nav-tabs .nav-tab {
+    margin-left: 0 !important;
+}
+
+.afmp-nav-tabs .nav-tab:last-child {
+    border-left: none !important;
+}
+
 .afm__left-side h3 .button.button-primary {
     margin-left: 30px;
     margin-top: -3px;
@@ -542,7 +554,8 @@ File Manager File Logs
 ===============================================
 */
 .dropbox__heading,
-.filelogs__heading {
+.filelogs__heading,
+.fma__heading {
     color: #000;
     font-size: 18px !important;
     font-style: normal;
@@ -550,12 +563,14 @@ File Manager File Logs
     line-height: normal;
 }
 
-.filelogs__heading {
+.filelogs__heading,
+.fma__heading {
     margin-bottom: 25px !important;
 }
 
 .dropbox__heading-pro-tag,
-.filelogs__heading-pro-tag {
+.filelogs__heading-pro-tag,
+.fma__heading-pro-tag {
     display: inline-block;
     padding: 2px 8px;
     background: linear-gradient(270deg, #011D33 0%, #3F6972 100%);
@@ -566,13 +581,15 @@ File Manager File Logs
 }
 
 .file-logs__wrap,
-.dropbox__wrap {
+.dropbox__wrap,
+.fma__wrap {
     opacity: 0.5;
     position:relative;
 }
 
 .file-logs__wrap::before,
-.dropbox__wrap::before {
+.dropbox__wrap::before,
+.fma__wrap::before {
     content: "";
     display: block;
     width: 100%;

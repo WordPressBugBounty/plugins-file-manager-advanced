@@ -32,6 +32,8 @@ class class_fma_main {
 		add_action( 'wp_ajax_fma_load_fma_ui', array( &$this, 'fma_load_fma_ui' ) );
 		add_action( 'wp_ajax_fma_review_ajax', array( $this, 'fma_review_ajax' ) );
 		$this->settings = get_option( 'fmaoptions' );
+
+        add_action( 'admin_init', array( $this, 'admin_init' ) );
 	}
 
 	/**
@@ -188,6 +190,18 @@ class class_fma_main {
 			die;
 		}
 	}
+
+    /**
+     * Admin Init
+     *
+     * @since 3.3.1
+     */
+    public function admin_init() {
+        $is_pro_version = get_option( 'active_plugins', array() );
+        if ( ! in_array( 'file-manager-advanced-pro/file-manager-advanced-shortcode.php', $is_pro_version, true ) ) {
+            require_once FMAFILEPATH . 'application/logs/class-filelogs.php';
+        }
+    }
 
 	public static function has_pro() {
 		$has_pro = apply_filters( 'fma__has_pro', false );

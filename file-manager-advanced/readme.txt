@@ -4,7 +4,7 @@ Tags: file-manager, wp-file-manager, document management, ftp, advance-file-mana
 Requires at least: 4.0
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 5.3.5
+Stable tag: 5.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,7 +77,9 @@ Whether you are a developer managing large files or a casual user needing basic 
 
 ✅ **Recent Directory Access:** Quickly return to previously opened folders. It saves you time by easily jumping to your most recent navigation paths.
 
+✅ **Email Notifications:** Get notified by email whenever a file or folder is created or deleted. Admins receive alerts for this activity, and users are informed when their files are removed, keeping everyone updated without needing to check manually.
 
+✅ **Slack Notifications:** Stay informed right in Slack when files or folders are added or deleted. Admins get instant updates, helping teams respond quickly and stay in sync without switching tools.
 
 ###⚡ **Manage and Display Document Libraries and File Manager in Front-end [Pro Version]— Key Features**
 
@@ -356,6 +358,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+= 5.3.6 - July 03, 2025 =
+* Tweak - Added demo screen.
+
 = 5.3.5 - June 17, 2025 =
 * Tweak - Added demo screen.
 

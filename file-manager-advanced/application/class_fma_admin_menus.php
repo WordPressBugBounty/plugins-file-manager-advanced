@@ -14,7 +14,51 @@ class class_fma_admin_menus {
 	 public function __construct() {
              include('class_fma_lang.php');
 			$this->langs = new class_fma_adv_lang();
+
+            add_action( 'fma__settings_tab_notifications_content', array( $this, 'notification_callback' ) );
 	  }
+
+    /**
+     * Notification Callback
+     * @since 6.7.3
+     */
+      public function notification_callback() {
+          if ( ! class_exists( 'AFMP\\Modules\\EmailNotification\\EmailNotification' ) ) {
+              echo '<div afmp-href="https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=email_notification&utm_campaign=plugin" class="fma__wrap">';
+              echo '<h2 class="fma__heading">Email notification Settings <span class="fma__heading-pro-tag">PRO</span></h2>';
+
+              echo '<table class="form-table" role="presentation"><tbody><tr><th scope="row"><label for="enable">Enable</label></th><td>            <input type="checkbox" id="enable" name="afmp__email_notification_settings[enable]" value="yes">
+            <label for="enable">Enable email notification</label>
+            </td></tr><tr><th scope="row"><label for="email">Email Address</label></th><td>            <input type="text" id="email" name="afmp__email_notification_settings[email]" value="" class="regular-text">
+            <p class="description">Email address to send notification.</p>
+            </td></tr><tr><th scope="row"><label for="events">Events</label></th><td>                <label>
+                    <input type="checkbox" name="afmp__email_notification_settings[events][]" value="rm">
+                    Delete File                </label><br>
+                                <label>
+                    <input type="checkbox" name="afmp__email_notification_settings[events][]" value="mkfile">
+                    Create File                </label><br>
+                                <label>
+                    <input type="checkbox" name="afmp__email_notification_settings[events][]" value="mkdir">
+                    Create Folder                </label><br>
+                </td></tr><tr><th scope="row"><label for="subject">Email Subject</label></th><td>            <input type="text" id="subject" name="afmp__email_notification_settings[subject]" class="regular-text">
+            <p class="description">Subject of the email notification.</p>
+            </td></tr><tr><th scope="row"><label for="message">Email Message</label></th><td>            <textarea id="message" name="afmp__email_notification_settings[message]" rows="5" class="large-text">The file action {event} was performed on {file_name} ({ext}) at {date_time} from IP {ip_address} on {site_name} by {username}.
+Thank you for using Advanced File Manager.</textarea>
+            <p class="description">Message body of the email notification. You can use placeholders like {file_name}, {action} etc.</p>
+            <p class="description">Available placeholders:</p><ul class="afmp-email-placeholders"><li><code>{username}</code> - This will fetch the user’s name who did the action</li><li><code>{ip_address}</code> - This will fetch the user’s IP Address</li><li><code>{event}</code> - This will fetch which file the user has created or deleted</li><li><code>{file_name}</code> - This will fetch the file name on which that action was done</li><li><code>{ext}</code> - This will fetch the file extension on which that action was done</li><li><code>{date_time}</code> - This will fetch the date the user acted on the file</li><li><code>{site_name}</code> - This will fetch the site name on which the action was performed</li></ul></td></tr></tbody></table>';
+              echo '</div>';
+          }
+
+          if ( ! class_exists( 'AFMP\\Modules\\SlackNotification\\SlackNotification' ) ) {
+              echo '<div afmp-href="https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=slack_notification&utm_campaign=plugin" class="fma__wrap">';
+              echo '<h2 class="fma__heading">Slack Notification <span class="fma__heading-pro-tag">PRO</span></h2>';
+
+              echo '<table class="form-table" role="presentation"><tbody><tr><th scope="row"><label for="afmp_slack_enable">Enable Slack Notification</label></th><td><input type="checkbox" id="afmp_slack_enable" name="afmp__slack_notification_settings[enable]" value="yes"><label for="afmp_slack_enable">Enable Slack Notification</label></td></tr><tr><th scope="row"><label for="afmp_slack_webhook_url">Slack Webhook URL</label></th><td><input type="text" id="afmp_slack_webhook_url" name="afmp__slack_notification_settings[webhook_url]" class="large-text"><p class="description">Enter your Slack Webhook URL to receive notifications.</p><a href="#">Click here to get your webhook URL</a></td></tr><tr><th scope="row"><label for="afmp_slack_event_notification">Event Notification</label></th><td><label><input type="checkbox" name="afmp__slack_notification_settings[events][]" value="rm">Delete File</label><br><label><input type="checkbox" name="afmp__slack_notification_settings[events][]" value="mkfile">Create File</label><br><label><input type="checkbox" name="afmp__slack_notification_settings[events][]" value="mkdir">Create Folder</label><br></td></tr><tr><th scope="row"><label for="slack_notification_message">Slack Notification Message</label></th><td><textarea id="slack_notification_message" name="afmp__slack_notification_settings[message]" rows="5" class="large-text">A quick update from the Advance File Manager plugin on your site {site_name}.
+A file was {event} by {username} on {date_time}. The file name is {file_name} with the extension {ext}, and the action was performed from the following IP Address: {ip_address}.</textarea><p class="description">Customize the message to be sent to Slack. You can use placeholders like {file_name}, {action}, etc.</p><p class="description">Available placeholders:</p><ul class="afmp-slack-placeholders"><li><code>{username}</code> - This will fetch the user’s name who did the action</li><li><code>{ip_address}</code> - This will fetch the user’s IP Address</li><li><code>{event}</code> - This will fetch which file the user has created or deleted</li><li><code>{file_name}</code> - This will fetch the file name on which that action was done</li><li><code>{ext}</code> - This will fetch the file extension on which that action was done</li><li><code>{date_time}</code> - This will fetch the date the user acted on the file</li><li><code>{site_name}</code> - This will fetch the site name on which the action was performed</li></ul></td></tr></tbody></table>';
+              echo '</div>';
+          }
+
+      }
 
 	/**
 	 * Loading Menus
@@ -535,8 +579,8 @@ HTML;
 	* Settings
     */
     public function file_manager_advanced_controls(){
-		if(current_user_can('manage_options')) {
-		    include('pages/controls.php');
+		if( current_user_can( 'manage_options' ) ) {
+		    include( 'pages/controls.php' );
 		 }
 	}
 	/**
