@@ -107,6 +107,10 @@ A file was {event} by {username} on {date_time}. The file name is {file_name} wi
         if ( ! class_exists( 'AFMP\Modules\Onedrive' ) ) {
             add_submenu_page( 'file_manager_advanced_ui', 'OneDrive Settings', 'OneDrive', 'manage_options', 'afmp-onedrive', array( $this, 'onedrive_menu'  ) );
         }
+        
+        if ( ! class_exists( 'AFMP\\Modules\\AmazonS3' ) ) {
+            add_submenu_page( 'file_manager_advanced_ui', 'Amazon S3 (AWS) Settings', 'Amazon S3 (AWS)', 'manage_options', 'afmp-aws', array( $this, 'aws_menu'  ) );
+        }
 	}
 
 	/**
@@ -407,6 +411,166 @@ A file was {event} by {username} on {date_time}. The file name is {file_name} wi
                         <p class="desc">
                             <strong>
                                 Copy this URL and paste it in your Google Drive App Console under Redirect URIs
+                            </strong>
+                        </p>
+                    </td>
+                </tr>
+            </table>';
+
+        submit_button();
+
+        echo '</div>';
+    }
+
+	/**
+	 * Amazon S3 (AWS) menu
+	 * @since 5.3.8
+	 */
+    public function aws_menu() {
+
+        echo '<style type="text/css">
+            .aws__heading {
+                color: #000;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+            }
+            
+            .aws__heading-pro-tag {
+                display: inline-block;
+                padding: 2px 8px;
+                background: linear-gradient(270deg, #011D33 0%, #3F6972 100%);
+                border-radius: 4px;
+                color: #fff;
+                font-size: 12px;
+                margin-left: 25px;
+            }
+            
+            .aws__wrap {
+                opacity: 0.5;
+                position:relative;
+            }
+            
+            .aws__wrap::before {
+                content: "";
+                display: block;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 1;
+                background: transparent;
+            }
+        </style>
+        <h2 class="aws__heading">Amazon S3 (AWS) Settings <span class="aws__heading-pro-tag">PRO</span></h2>
+
+        <div class="aws__wrap">
+            <table class="form-table">
+                <tr>
+                    <th>
+                        <lable for="fma__enable">Enable</lable>
+                    </th>
+                    <td>
+                        <input type="checkbox" id="fma__enable">
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th>
+                        <label for="afm__alias">Alias</label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__alias" class="regular-text">
+                        <p class="desc">
+                            <strong>Enter a title which will be displayed on File Manager</strong>
+                        </p>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th>
+                        <label for="afm__app_key">App Key</label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__app_key" class="regular-text">
+                        <p class="desc">
+                            <strong>Enter your Amazon S3 (AWS) App key. <a href="#">Learn how to get your credentials</a></strong>
+                        </p>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th>
+                        <label for="afm__app_secret">App Secret</label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__app_secret" class="regular-text">
+                        <p class="desc">
+                            <strong>Enter your Amazon S3 (AWS) App secret. <a href="#">Learn how to get your credentials</a></strong>
+                        </p>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th>
+                        <label for="afm__region">Region</label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__region" class="regular-text">
+                        
+                        <p class="desc">
+                            <strong>
+                                Enter the AWS region where your bucket is located (e.g. us-east-1)
+                            </strong>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="afm__bucket">Bucket</label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__bucket" class="regular-text">
+                        
+                        <p class="desc">
+                            <strong>
+                                Enter the name of your Amazon S3 bucket
+                            </strong>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="afm__user_role_access">User Role Access</label>
+                    </th>
+                    <td>
+                        <input type="checkbox" id="editor_role" value class="regular-text">
+                        <label for="editor_role">Editor</label><br>
+                        <input type="checkbox" id="editor_role" value class="regular-text">
+                        <label for="editor_role">Author</label><br>
+                        <input type="checkbox" id="editor_role" value class="regular-text">
+                        <label for="editor_role">Contributor</label><br>
+                        <input type="checkbox" id="editor_role" value class="regular-text">
+                        <label for="editor_role">Subscriber</label><br>
+                        <p class="desc">
+                            <strong>
+                                Select the user roles allowed to access the AWS-connected file manager
+                            </strong>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="afm__private_folder_access">Private Folder Access</label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__private_folder_access" class="regular-text">
+                        
+                        <p class="desc">
+                            <strong>
+                                Enter a folder name to restrict access to that folder only. Leave blank to use the root directory (e.g. awsfolder) 
                             </strong>
                         </p>
                     </td>

@@ -4,7 +4,7 @@ Tags: file-manager, wp-file-manager, document management, ftp, advance-file-mana
 Requires at least: 4.0
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 5.3.6
+Stable tag: 5.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -113,6 +113,8 @@ The Shortcode Addon for Advanced File Manager unlocks even more possibilities by
 
 ✔️ **Google Drive:** Easily link Google Drive with WordPress to access, manage, and sync your cloud files right from the file manager interface. 
 
+✔️ **OneDrive:** Seamlessly connect your OneDrive account to WordPress and manage, upload, and organize files directly from the File Manager—no external tabs or tools required.
+
 **Get ✨[Advanced File Manager Pro](https://advancedfilemanager.com/pricing/?utm_source=wp_org&utm_medium=afm_product_page)✨ Now!**
 
 
@@ -212,7 +214,7 @@ Soon, you will be able to integrate your favorite cloud storage app with WordPre
 
 * [Google Drive](https://advancedfilemanager.com/pricing/?utm_source=wp_org&utm_medium=readme&utm_campaign=google_drive)
 
-* OneDrive (Coming Soon)
+* [OneDrive](https://advancedfilemanager.com/pricing/?utm_source=wp_org&utm_medium=readme&utm_campaign=one_drive)
 
 ### 🤝 **Compatibility**
 
@@ -358,6 +360,12 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+= 5.4.0 - July 29, 2025 =
+* New - Introducing Debug feature, which will not save the code if it contains error.
+* Fix - Download progress bar was showing incorrect progress.
+* Fix - Typo Fix Incorrect Display Name for Editor
+* Security Enhancement - Authenticated (Subscriber+) Directory Traversal to Arbitrary File Deletion.
+
 = 5.3.6 - July 03, 2025 =
 * Tweak - Added demo screen.
 
