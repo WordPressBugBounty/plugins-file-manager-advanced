@@ -131,7 +131,7 @@ A file was {event} by {username} on {date_time}. The file name is {file_name} wi
                             </td>
                         </tr>
                     </table>
-                    <?php submit_button( __( 'Save AI Settings', 'afm-pro' ) ); ?>
+                    <?php submit_button( __( 'Save Changes', 'afm-pro' ) ); ?>
                 </form>
                 
                 <div style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-left: 4px solid #0073aa; border-radius: 4px;">
@@ -200,6 +200,19 @@ A file was {event} by {username} on {date_time}. The file name is {file_name} wi
             4
         );
         add_submenu_page( 'file_manager_advanced_ui', 'Settings', 'Settings', $subPer, 'file_manager_advanced_controls', array(&$this, 'file_manager_advanced_controls'));
+		
+        if ( ! class_exists( 'AFMP\Modules\AFMP_AI_Integration' ) ) {
+            add_submenu_page(
+                'file_manager_advanced_ui',
+                'AI - Code Pilot',
+                'AI - Code Pilot <span class="update-plugins count-1" style="background: #d63638; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 5px;">NEW</span>',
+                'manage_options',
+                'ai-code-pilot',
+                array( $this, 'ai_code_pilot_callback' ),
+                2
+            );
+        }
+
         if(!class_exists('file_manager_advanced_shortcode')) {
 		    add_submenu_page( 'file_manager_advanced_ui', 'Shortcodes', 'Shortcodes', $subPer, 'file_manager_advanced_shortcodes', array(&$this, 'file_manager_advanced_shortcodes'));
 	    }
@@ -213,7 +226,7 @@ A file was {event} by {username} on {date_time}. The file name is {file_name} wi
         }
 
         if ( ! class_exists( 'AFMP\\Modules\\FileLogs' ) ) {
-            add_submenu_page( 'file_manager_advanced_ui', 'File Logs', 'File Logs', 'manage_options', 'afmp-file-logs', array( $this, 'afmp__file_logs' ), 2 );
+            add_submenu_page( 'file_manager_advanced_ui', 'File Logs', 'File Logs', 'manage_options', 'afmp-file-logs', array( $this, 'afmp__file_logs' ), 3 );
         }
         
         if ( ! class_exists( 'AFMP\\Modules\\GoogleDrive' ) ) {
@@ -226,17 +239,6 @@ A file was {event} by {username} on {date_time}. The file name is {file_name} wi
         
         if ( ! class_exists( 'AFMP\\Modules\\AmazonS3' ) ) {
             add_submenu_page( 'file_manager_advanced_ui', 'Amazon S3 (AWS) Settings', 'Amazon S3 (AWS)', 'manage_options', 'afmp-aws', array( $this, 'aws_menu'  ) );
-        }
-		
-        if ( ! class_exists( 'AFMP\Modules\AFMP_AI_Integration' ) ) {
-            add_submenu_page(
-                'file_manager_advanced_ui',
-                'AI - Code Pilot',
-                'AI - Code Pilot <span class="update-plugins count-1" style="background: #d63638; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 5px;">NEW</span>',
-                'manage_options',
-                'ai-code-pilot',
-                array( $this, 'ai_code_pilot_callback' )
-            );
         }
 	}
 
@@ -991,3 +993,4 @@ HTML;
         return $wp_roles->roles; 
 	}
 }
+
