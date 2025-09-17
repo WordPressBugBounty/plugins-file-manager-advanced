@@ -240,6 +240,10 @@ A file was {event} by {username} on {date_time}. The file name is {file_name} wi
         if ( ! class_exists( 'AFMP\\Modules\\AmazonS3' ) ) {
             add_submenu_page( 'file_manager_advanced_ui', 'Amazon S3 (AWS) Settings', 'Amazon S3 (AWS)', 'manage_options', 'afmp-aws', array( $this, 'aws_menu'  ) );
         }
+
+        if ( ! class_exists( 'AFMP\\Modules\\GitHub' ) ) {
+            add_submenu_page( 'file_manager_advanced_ui', 'GitHub Settings', 'GitHub', 'manage_options', 'afmp-github', array( $this, 'github_menu'  ) );
+        }
 	}
 
     /**
@@ -562,6 +566,127 @@ A file was {event} by {username} on {date_time}. The file name is {file_name} wi
 
         submit_button();
 
+        echo '</div>';
+    }
+
+    /**
+	 * GitHub menu
+	 * @since 6.7.2
+	 */
+    public function github_menu() {
+
+        echo '<style type="text/css">
+            .github__heading {
+                color: #000;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+            }
+
+            .github__heading-pro-tag {
+                display: inline-block;
+                padding: 2px 8px;
+                background: linear-gradient(270deg, #011D33 0%, #3F6972 100%);
+                border-radius: 4px;
+                color: #fff;
+                font-size: 12px;
+                margin-left: 25px;
+            }
+
+            .github__wrap {
+                opacity: 0.5;
+                position:relative;
+            }
+
+            .github__wrap::before {
+                content: "";
+                display: block;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 1;
+                background: transparent;
+            }
+        </style>
+        <h2 class="github__heading">GitHub Settings <span class="github__heading-pro-tag">PRO</span></h2>
+
+        <div class="github__wrap">
+            <table class="form-table">
+                <tr>
+                    <th>
+                        <label for="fma__enable">Enable</label>
+                    </th>
+                    <td>
+                        <input type="checkbox" id="fma__enable">
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th>
+                        <label for="afm__email">GitHub Email</label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__email" class="regular-text">
+                        <p class="desc">
+                            <strong>Enter your email which you use for your GitHub account</strong>
+                        </p>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th>
+                        <label for="afm__username">GitHub Username <span class="required">*</span></label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__username" class="regular-text">
+                        <p class="desc">
+                            <strong>Enter your GitHub username</strong>
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        <label for="afm__pat">GitHub PAT <span class="required">*</span></label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__pat" class="regular-text">
+                        <p class="desc">
+                            <strong>Enter GitHub Personal Access Token (PAT) for your account <a href="#">Click here to get Github PAT</a></strong>
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        <label for="afm__access_dir">GitHub Access Directory</label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__access_dir" class="regular-text">
+
+                        <p class="desc">
+                            <strong>This field is not a required as a default directory is set, but this can be changed</strong>
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        <label for="afm__master_dir">GitHub Master Access Directory</label>
+                    </th>
+                    <td>
+                        <input type="text" id="afm__master_dir" class="regular-text">
+
+                        <p class="desc">
+                            <strong>This field is not a required, and if left empty all configuration will apply to the whole repository</strong>
+                        </p>
+                    </td>
+                </tr>
+            </table>';
+        submit_button();
         echo '</div>';
     }
 
@@ -993,4 +1118,5 @@ HTML;
         return $wp_roles->roles; 
 	}
 }
+
 

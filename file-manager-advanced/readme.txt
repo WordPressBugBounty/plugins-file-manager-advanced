@@ -4,7 +4,7 @@ Tags: file-manager, wp-file-manager, document management, ftp, advance-file-mana
 Requires at least: 4.0
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 5.4.2
+Stable tag: 5.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -375,10 +375,14 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
-= 5.4.2 - August 26, 2025 =
+
+= 5.4.3 - September 12, 2025 =
+* Tweak - Added demo screen of GitHub Feature.
+
+= 5.4.2 - August 25, 2025 =
 * Tweak - Repositioning of AI Integration admin menu.
 
-= 5.4.1 - July 13, 2025 =
+= 5.4.1 - August 18, 2025 =
 * Tweak - Added demo screen.
 
 = 5.4.0 - July 29, 2025 =
