@@ -1,6 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
 <div class="wrap fma" style="background:#fff; padding: 20px; border:1px solid #ccc;">
-<h3><?php _e('Shortcodes','file-manager-advanced')?> <a href="https://advancedfilemanager.com/documentation/" class="button" target="_blank">
+<h3><?php _e('Blocks','file-manager-advanced')?> <a href="https://advancedfilemanager.com/documentation/" class="button" target="_blank">
     
 <?php _e('Documentation','file-manager-advanced')?></a>
 
@@ -20,14 +20,14 @@
         </strong>
     </p>
     </div>
-<h3><?php _e('Shortcode Addon Demo:', 'file-manager-advanced'); ?></h3>
+<h3><?php _e('Block Generator Demo:', 'file-manager-advanced'); ?></h3>
 <p><?php _e('If you want to check the demo of shortcode addon then click on link given below.', 'file-manager-advanced');?></p>
 <a href="https://advancedfilemanager.com/shortcode-demo/" target="_blank" class="">Click here for demo</a>
 
-<h3><?php _e('Shortcode for Logged In Users:', 'file-manager-advanced'); ?></h3>
+<h3><?php _e('Block for Logged In Users:', 'file-manager-advanced'); ?></h3>
 <p><code>[file_manager_advanced login="yes" roles="author,editor,administrator" path="wp-content" hide="plugins" operations="upload,download" block_users="5" view="grid" theme="light" lang ="en" upload_allow="all" upload_max_size="2G"]</code></p>
 
-<h3><?php _e('Shortcode for Non Logged In Users (visitors):', 'file-manager-advanced'); ?></h3>
+<h3><?php _e('Block for Non Logged In Users (visitors):', 'file-manager-advanced'); ?></h3>
 <p><code>[file_manager_advanced login="no" path="wp-content" hide="plugins" operations="upload,download" view="grid" theme="light" lang ="en" upload_allow="all" upload_max_size="2G"]</code></p>
 
 <h3><?php _e('Conditions for User Roles:', 'file-manager-advanced'); ?></h3>

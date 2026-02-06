@@ -263,7 +263,7 @@ abstract class elFinderVolumeDriver
         // enable i18n folder name that convert name to elFinderInstance.messages['folder_'+name]
         'i18nFolderName' => false,
         // Search timeout (sec)
-        'searchTimeout' => 30,
+        'searchTimeout' => 120,
         // Search exclusion directory regex pattern (require demiliter e.g. '#/path/to/exclude_directory#i')
         'searchExDirReg' => '',
         // library to crypt/uncrypt files names (not implemented)

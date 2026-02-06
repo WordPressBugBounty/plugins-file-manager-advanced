@@ -1,96 +1,115 @@
-( function( $ ) {
-    $( '.file-manager-advanced-select2.fma-code-editor-theme' ).select2( {
-        templateResult: function( a,b ){
-            return disable_pro_themes( a,b, 'https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=code_editor_pro_theme&utm_campaign=plugin' );
+(function ($) {
+    $('.file-manager-advanced-select2.fma-code-editor-theme').select2({
+        templateResult: function (a, b) {
+            return disable_pro_themes(a, b, 'https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=code_editor_pro_theme&utm_campaign=plugin');
         }
-    } );
+    });
 
-    $( '.file-manager-advanced-select2.fma-theme' ).select2( {
-        templateResult: function( a,b ){
-            return disable_pro_themes( a,b, 'https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=file_manager_pro_theme&utm_campaign=plugin' );
+    $('.file-manager-advanced-select2.fma-theme').select2({
+        templateResult: function (a, b) {
+            return disable_pro_themes(a, b, 'https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=file_manager_pro_theme&utm_campaign=plugin');
         }
-    } );
+    });
 
-    $( document ).on( 'click', '.on-click-show-popup', function() {
-        file_manager_advanced_popup( $( this ).attr( 'fma-href' ) );
-    } );
+    $(document).on('click', '.on-click-show-popup', function () {
+        file_manager_advanced_popup($(this).attr('fma-href'));
+    });
 
-    $( '#fma__hide-banner' ).on( 'click', function( e ) {
+    $('#fma__hide-banner').on('click', function (e) {
         e.preventDefault();
 
-        $( '.afm__right-side' ).hide();
-        $( '.afm__left-side' ).css( { 'width': '100%', 'max-width': '100%' } );
+        $('.afm__right-side').hide();
+        $('.afm__left-side').css({ 'width': '100%', 'max-width': '100%' });
 
-        rest_api_post( 'hide-banner' )
-            .catch( error => console.error( 'Error:', error ) );
-    } );
+        rest_api_post('hide-banner')
+            .catch(error => console.error('Error:', error));
+    });
 
-    $( '#fma__minimize-maximize' ).on( 'click', function( e ) {
+    $('#fma__minimize-maximize').on('click', function (e) {
         e.preventDefault();
 
-        $( this ).children().toggleClass( 'fma__minimized' );
+        $(this).children().toggleClass('fma__minimized');
 
         var action = 'maximize';
-        if ( 'true' === $( this ).attr( 'fma-maximized' ) ) {
+        if ('true' === $(this).attr('fma-maximized')) {
             action = 'minimize';
         }
 
-        minimize_maximize( this, action );
+        minimize_maximize(this, action);
 
         rest_api_post(
             'minimize-maximize-banner',
             { action: action }
-        ).catch( error => console.error( 'Error:', error ) );
-    } );
+        ).catch(error => console.error('Error:', error));
+    });
 
-    $( '.dropbox__wrap, .file-logs__wrap, .fma__wrap' ).on( 'click', function() {
+    $('.dropbox__wrap, .file-logs__wrap, .fma__wrap').on('click', function () {
 
-        var redirect_url = $( this ).attr( 'afmp-href' );
-        if ( ! redirect_url ) {
+        var redirect_url = $(this).attr('afmp-href');
+        if (!redirect_url) {
             redirect_url = '';
         }
 
-        file_manager_advanced_popup( redirect_url, '', '' );
-    } );
+        file_manager_advanced_popup(redirect_url, '', '');
+    });
 
-    $( '.googledrive__wrap' ).on( 'click', function() {
-        file_manager_advanced_popup( 
-			'https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=google_drive_banner&utm_campaign=plugin',
-			'',
-			''
-		);
-    } );
-	
-    $( '.dropbox__wrap, .onedrive__wrap' ).on( 'click', function() {
-        file_manager_advanced_popup( '', '', '' );
-    } );
+    $('.googledrive__wrap').on('click', function () {
+        file_manager_advanced_popup(
+            'https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=google_drive_banner&utm_campaign=plugin',
+            '',
+            ''
+        );
+    });
 
-    $( '.aws__wrap' ).on( 'click', function() {
-        file_manager_advanced_popup( 'https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=aws_banner&utm_campaign=plugin', '', '' );
-	} );
-    
-    $( '.github__wrap' ).on( 'click', function() {
-        file_manager_advanced_popup( 
-			'https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=github_banner&utm_campaign=plugin',
-			'',
-			''
-		);
-    } );
+    $('.dropbox__wrap, .onedrive__wrap').on('click', function () {
+        file_manager_advanced_popup('', '', '');
+    });
 
-    function file_manager_advanced_popup( redirect_url = '', message = '', button_title = '' ) {
-        if ( ! redirect_url.length ) {
+    // Use event delegation for blocks wrap (since it's added dynamically)
+    // Same behavior as OneDrive/Dropbox - empty string for default popup
+    $(document).on('click', '.fma__blocks__wrap', function () {
+        var redirect_url = $(this).attr('afmp-href');
+        if (!redirect_url) {
+            redirect_url = 'https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=blocks_banner&utm_campaign=plugin';
+        }
+        file_manager_advanced_popup(redirect_url, '', '');
+        return false;
+    });
+
+    $('.aws__wrap').on('click', function () {
+        file_manager_advanced_popup('https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=aws_banner&utm_campaign=plugin', '', '');
+    });
+
+    $('.github__wrap').on('click', function () {
+        file_manager_advanced_popup(
+            'https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=github_banner&utm_campaign=plugin',
+            '',
+            ''
+        );
+    });
+
+    $('.googlecloud__wrap').on('click', function () {
+        file_manager_advanced_popup(
+            'https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=googlecloud_banner&utm_campaign=plugin',
+            '',
+            ''
+        );
+    });
+
+    function file_manager_advanced_popup(redirect_url = '', message = '', button_title = '') {
+        if (!redirect_url.length) {
             redirect_url = 'https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=dropbox_banner&utm_campaign=plugin';
         }
 
-        if ( ! message.length ) {
+        if (!message.length) {
             message = 'Get advanced features with Advanced File Manager Pro!';
         }
 
-        if ( ! button_title.length ) {
+        if (!button_title.length) {
             button_title = 'Get Pro Now';
         }
-        var element = $( '#fma__pro_popup' );
-        if ( element.length ) {
+        var element = $('#fma__pro_popup');
+        if (element.length) {
             element.show();
         } else {
             let fma__pro_popup = `<div class="fma__pro-popup" id="fma__pro_popup">
@@ -126,52 +145,52 @@
                     
                 </div>
             </div>`;
-            $( 'body' ).append( fma__pro_popup );
+            $('body').append(fma__pro_popup);
         }
 
-        $( document ).on( 'click', '#close-popup-btn', function( e ) {
+        $(document).on('click', '#close-popup-btn', function (e) {
             e.preventDefault();
 
-            $( '#fma__pro_popup' ).remove();
-        } );
+            $('#fma__pro_popup').remove();
+        });
     }
 
-    function minimize_maximize( element, action ) {
-        switch ( action ) {
+    function minimize_maximize(element, action) {
+        switch (action) {
             case 'maximize':
-                $( '#remove-on-minimize, .fma__footer' ).show();
-                $( element ).attr( 'fma-maximized', 'true' );
+                $('#remove-on-minimize, .fma__footer').show();
+                $(element).attr('fma-maximized', 'true');
                 break;
             case 'minimize':
-                $( '#remove-on-minimize, .fma__footer' ).hide();
-                $( element ).attr( 'fma-maximized', 'false' );
+                $('#remove-on-minimize, .fma__footer').hide();
+                $(element).attr('fma-maximized', 'false');
 
                 break;
         }
     }
 
-    var rest_api_post = async function( url, params = {} ) {
+    var rest_api_post = async function (url, params = {}) {
         url = afmAdmin.jsonURL + 'file-manager-advanced/v1/' + url;
 
-        return await fetch( url, {
+        return await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify( params )
-        } ).then( response => response.json() );
+            body: JSON.stringify(params)
+        }).then(response => response.json());
     };
 
-    var disable_pro_themes = function( a,b, redirect_url ) {
-        if ( a.id === '' ) {
+    var disable_pro_themes = function (a, b, redirect_url) {
+        if (a.id === '') {
             return a.text;
         }
 
-        if ( ! a.disabled ) {
+        if (!a.disabled) {
             return a.text;
         }
 
-        return $( `<span fma-href="${redirect_url}" class="fma__clearfix on-click-show-popup">
+        return $(`<span fma-href="${redirect_url}" class="fma__clearfix on-click-show-popup">
             <span class="fma__left">
                 ${a.text}
             </span>
@@ -182,4 +201,20 @@
             </span>
         </span>` );
     }
-} )( jQuery );
+
+    // Fix for notices appearing inside the banner - run immediately and on load
+    function fixAdminNotices() {
+        var $notices = $('.afm__right-side .notice, .afm__right-side .updated, .afm__right-side .error, .afm__right-side .is-dismissible');
+        if ($notices.length > 0) {
+            $notices.insertBefore('.afm__left-side');
+            $notices.css('margin-left', '0').css('margin-right', '0').css('margin-bottom', '20px').show();
+        }
+    }
+
+    $(document).ready(function () {
+        fixAdminNotices();
+        // Check again after a short delay in case of dynamic insertions
+        setTimeout(fixAdminNotices, 500);
+        setTimeout(fixAdminNotices, 2000);
+    });
+})(jQuery);

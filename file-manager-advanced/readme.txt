@@ -2,9 +2,9 @@
 Contributors: wpexpertsio, saadiqbal
 Tags: file-manager, wp-file-manager, document management, ftp, advance-file-manager
 Requires at least: 4.0
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 5.4.4
+Stable tag: 5.4.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -375,6 +375,20 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+= 5.4.8 - February 03, 2026 =
+* Fix – Resolved a script dependency conflict.
+* Improvement - File Manager themes.
+* Improvement – Added a complete data deletion option in settings to remove all plugin data upon uninstallation.
+
+= 5.4.7 - December 04, 2025 =
+* Tweak - Increased elfinder search timeout to 120.
+* Fix - Fixed Uploading files issue by other user roles.
+
+= 5.4.6 - November 5, 2025 =
+* Tweak - Updated Shortcodes menu to Blocks.
+
+= 5.4.5 - October 17, 2025 =
+* Tweak - Added demo screen of Google Cloud Feature.
 
 = 5.4.4 - September 29, 2025 =
 * Tweak - Added new Advanced file manager icon on WordPress dashboard.

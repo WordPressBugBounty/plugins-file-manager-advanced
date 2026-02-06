@@ -189,13 +189,20 @@ class class_fma_connector {
 function afm_plugin_file_validName( $name ) {
 
     if ( ! empty( $name ) ) {
-
-        if( $name !== sanitize_file_name( $name ) ){
-            return false;
-        }
+		// Check for dangerous characters (but allow spaces)
+		// Block characters that could be used for path traversal or command injection
+		if( preg_match( '/[<>:"|?*\x00-\x1F]/', $name ) ) {
+			return false;
+		}
+		
+		// Block files starting with dot (except for special cases handled elsewhere)
+		if( strpos($name, '.') === 0 && $name !== '.' && $name !== '..' ) {
+			return false;
+		}
 
         $lower_name = strtolower( $name );
 
+		// Block dangerous file extensions
 		if(
 			  strpos($lower_name, '.php') !== false
 		   || strpos($lower_name, '.phtml') !== false
@@ -206,10 +213,13 @@ function afm_plugin_file_validName( $name ) {
 		   || strpos($lower_name, '.js') !== false
 		  ) {
 			return false;
-		} else {
-			return strpos($name, '.') !== 0;
 		}
+		
+		// Filename is valid (allows spaces)
+		return true;
 	}
+	
+	return false;
 }
 function access($attr, $path, $data, $volume, $isDir, $relpath) {
 	$basename = basename($path);
