@@ -12,6 +12,7 @@ if (class_fma_main::has_pro()) {
     $hide_banner = 'yes';
 }
 
+$appsumo_banner_hide = get_option('fma_appsumo_banner_hide', 'no');
 ?>
 <div class="wrap fma afm__clearfix">
     <h1 class="wp-heading-inline"><?php _e('Advanced File Manager', 'file-manager-advanced'); ?></h1>
@@ -21,6 +22,40 @@ if (class_fma_main::has_pro()) {
             target="_blank"><?php _e('Get Advanced File Manager Pro', 'file-manager-advanced'); ?></a>
     <?php } ?>
     <hr class="wp-header-end">
+    <?php if ('yes' !== $appsumo_banner_hide) { ?>
+            <div class="fma-appsumo-banner" id="fma_appsumo_banner">
+                <div class="fma-appsumo-content">
+                    <div class="fma-appsumo-badge">
+                        <img src="<?php echo FMA_PLUGIN_URL . 'application/assets/images/60-days.svg' ?>"
+                            alt="60 Days Money Back">
+                    </div>
+                    <div class="fma-appsumo-text-wrapper">
+                        <h2 class="fma-appsumo-title">
+                            <?php _e('<span class="fma-appsumo-bold">Advanced File Manager</span> Lifetime Deal Is Live on <span class="fma-appsumo-bold">AppSumo</span>', 'file-manager-advanced'); ?>
+                        </h2>
+                        <ul class="fma-appsumo-features">
+                            <li><span class="dashicons dashicons-yes-alt"></span>
+                                <?php _e('PAY ONCE', 'file-manager-advanced'); ?></li>
+                            <li><span class="dashicons dashicons-yes-alt"></span>
+                                <?php _e('SAVE UP TO $200', 'file-manager-advanced'); ?></li>
+                            <li><span class="dashicons dashicons-yes-alt"></span>
+                                <?php _e('GET LIFETIME ACCESS', 'file-manager-advanced'); ?></li>
+                        </ul>
+                    </div>
+                    <div class="fma-appsumo-action">
+                        <div class="fma-appsumo-btn-wrapper">
+                            <a href="https://appsumo.com/products/advanced-file-manager/?clickId=RZuS9F0CrxyZUguTHB1esQUZUkuxXjUuK3KH3c0&irgwc=1&afsrc=1&utm_medium=4245229&utm_campaign=Online%20Tracking%20Link&utm_source=IR"
+                                target="_blank" class="fma-appsumo-btn">
+                                <?php _e('Get Lifetime Deal Now', 'file-manager-advanced'); ?>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <a href="javascript:void(0)" class="fma-appsumo-close" id="fma_appsumo_close_btn">
+                    <img src="<?php echo FMA_PLUGIN_URL . 'application/assets/images/close-popup.svg' ?>" alt="Close">
+                </a>
+            </div>
+        <?php } ?>
     <?php
     echo class_fma_admin_menus::shortcodeUpdateNotice();
     settings_errors();
@@ -245,3 +280,176 @@ if (class_fma_main::has_pro()) {
         });
     </script>
 <?php } ?>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+    .fma-appsumo-banner {
+        background-color: #7EF689;
+        border-radius: 12px;
+        padding: 20px 30px;
+        margin: 10px 5px 20px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        color: #000;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .fma-appsumo-content {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 25px;
+    }
+
+    .fma-appsumo-badge img {
+        width: 125px;
+        height: auto;
+    }
+
+    .fma-appsumo-text-wrapper {
+        flex-grow: 1;
+    }
+
+    .fma-appsumo-title {
+        margin: 0 0 10px 0;
+        font-size: 26px;
+        font-weight: 600;
+        color: #000;
+        line-height: 1.2;
+    }
+
+    span.fma-appsumo-bold {
+        font-weight: 700;
+    }
+
+    .fma-appsumo-features {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        gap: 20px;
+    }
+
+    .fma-appsumo-features li {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 700;
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+
+    .fma-appsumo-features li .dashicons {
+        color: #ffffff;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        background-color: black;
+        border-radius: 100%;
+        border: none;
+    }
+
+    .fma-appsumo-action {
+        margin-left: auto;
+        padding-right: 30px;
+    }
+
+    .fma-appsumo-btn-wrapper {
+        position: relative;
+        display: inline-block;
+        padding: 5px;
+    }
+
+    .fma-appsumo-btn-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 0;
+        right: 8px;
+        bottom: 0px;
+        border: 2px dashed #000;
+        border-radius: 12px;
+        z-index: 1;
+    }
+
+    .fma-appsumo-btn {
+        background: #fff;
+        color: #000;
+        text-decoration: none;
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 18px;
+        display: inline-block;
+        border: 2px solid #000;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 2;
+        white-space: nowrap;
+    }
+
+    .fma-appsumo-btn:hover {
+        background: #000;
+        color: #7EF689;
+    }
+
+    .fma-appsumo-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        text-decoration: none;
+    }
+
+    .fma-appsumo-close img {
+        width: 30px;
+        height: 30px;
+        opacity: 0.6;
+        transition: opacity 0.3s;
+    }
+
+    .fma-appsumo-close:hover img {
+        opacity: 1;
+    }
+
+    @media (max-width: 1100px) {
+        .fma-appsumo-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 15px;
+        }
+
+        .fma-appsumo-features {
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .fma-appsumo-action {
+            margin: 0;
+            padding: 0;
+        }
+    }
+</style>
+
+<script>
+    jQuery(document).ready(function ($) {
+        $('#fma_appsumo_close_btn').on('click', function (e) {
+            e.preventDefault();
+            var fmaajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
+            var nonce = "<?php echo wp_create_nonce('fmaskey'); ?>";
+
+            $.ajax({
+                type: "post",
+                url: fmaajaxurl,
+                data: {
+                    action: "fma_hide_appsumo_banner",
+                    nonce: nonce
+                },
+                success: function (response) {
+                    $('#fma_appsumo_banner').slideUp('slow');
+                }
+            });
+        });
+    });
+</script>

@@ -4,23 +4,24 @@ Tags: file-manager, wp-file-manager, document management, ftp, advance-file-mana
 Requires at least: 4.0
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 5.4.8
+Stable tag: 5.4.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Use Advanced File Manager to manage WordPress files, create archives, and build document libraries—all directly from your WordPress dashboard!
 
 == Description ==
+[📢 A Pro version Lifetime Deal is available ⏰](https://advancedfilemanager.com/appsumo-lifetime-deal?utm_source=wp_org&utm_medium=readme&utm_campaign=ltd)
 
-[Buy Pro](https://advancedfilemanager.com/pricing/?utm_source=wp_org&utm_medium=readme&utm_campaign=buy_now) | [Live Demo](https://filemanageradvanced-demo.instawp.xyz/?utm_source=wp_org&utm_medium=readme&utm_campaign=live_demo) | [Documentation](https://advancedfilemanager.com/documentation/?utm_source=wp_org&utm_medium=readme&utm_campaign=documentation) | [Support](https://objectsws.atlassian.net/servicedesk/customer/portal/37)
+ [Live Demo](https://filemanageradvanced-demo.instawp.xyz/?utm_source=wp_org&utm_medium=readme&utm_campaign=live_demo) | [Documentation](https://advancedfilemanager.com/documentation/?utm_source=wp_org&utm_medium=readme&utm_campaign=documentation) | [Support](https://objectsws.atlassian.net/servicedesk/customer/portal/37)
 
 **Manage WordPress files and create document libraries with ease!**
 
-Are you tired of managing your WordPress site files via FTP clients or cPanel? 😖
+Are you tired of managing your WordPress site files via FTP clients or hosting control panels like cPanel, hPanel, Plesk, DirectAdmin, or other hosting panels? 😖
 
 If that is the case, then ✨ **Download Advanced File Manager Now!** ✨
 
-With this WordPress file manager plugin, you can perform multiple file operations, such as **Copy, Paste, Rename, Edit, Delete, Upload, Download, Create an archive (Zip archive), etc.,** directly from the WordPress dashboard—no need for any cPanel or FTP.
+With this WordPress file manager plugin, you can perform multiple file operations, such as **Copy, Paste, Rename, Edit, Delete, Upload, Download, Create an archive (Zip archive), etc.,** directly from the WordPress dashboard—no need for any cPanel or FTP or other hosting panels.
 
 The best part is that this WordPress file manager plugin also allows you to access files outside of the WordPress root directory—which means you can **create document libraries/download managers** as well. 😃
 
@@ -118,6 +119,13 @@ The Shortcode Addon for Advanced File Manager unlocks even more possibilities by
 ✔️ **OneDrive:** Seamlessly connect your OneDrive account to WordPress and manage, upload, and organize files directly from the File Manager—no external tabs or tools required.
 
 ✔️ **Amazon S3:** Seamlessly connect your Amazon S3 account to WordPress and manage, upload, and organize files directly from the File Manager—no external tabs or tools required.
+
+✔️ **pCloud:** Seamlessly connect your pCloud account to WordPress and manage, upload, and organize files directly from the File Manager, no external tabs or tools required.
+
+✔️ **Cloudflare R2:** Seamlessly connect your Cloudflare R2 storage to WordPress and manage, upload, and organize files directly from the File Manager, with no external tabs or tools required.
+
+✔️ **Digital Ocean (Coming Soon):** Seamlessly connect your DigitalOcean Spaces account to WordPress and manage, upload, and organize files directly from the File Manager, no external tabs or tools required.
+
 
 ✔️ **AI Integration:** Effortlessly enhance your coding experience with the built-in AI Agent in the Code Editor—create, edit, and customize code instantly without leaving the File Manager.
 
@@ -222,7 +230,13 @@ Soon, you will be able to integrate your favorite cloud storage app with WordPre
 
 * [OneDrive](https://advancedfilemanager.com/pricing/?utm_source=wp_org&utm_medium=readme&utm_campaign=one_drive)
 
-* [Amazon S3](https://advancedfilemanager.com/pricing/?utm_source=wp_org&utm_medium=readme&utm_campaign=one_drive)
+* [Amazon S3](https://advancedfilemanager.com/pricing/?utm_source=wp_org&utm_medium=readme&utm_campaign=amazon_s3)
+
+* [pCloud](https://advancedfilemanager.com/pricing/?utm_source=wp_org&utm_medium=readme&utm_campaign=p_cloud)
+
+* [Cloudflare R2](https://advancedfilemanager.com/pricing/?utm_source=wp_org&utm_medium=readme&utm_campaign=cloudflare_r2)
+
+* [Google Cloud](https://advancedfilemanager.com/pricing/?utm_source=wp_org&utm_medium=readme&utm_campaign=google_cloud)
 
 ### 🤝 **Compatibility**
 
@@ -302,6 +316,9 @@ Whether you face issues with uploading files, customizing settings, or need guid
 = Can I access folders outside the WordPress root directory? =
 Yes, you can access folders outside the WordPress root directory. Just go to the plugin settings and modify the root path as needed.
 
+= Can I manage cloud storage files directly from WordPress? =
+
+Yes, the plugin allows you to connect supported cloud storage apps like Dropbox, Google Drive, OneDrive, Amazon S3, pCloud, Cloudflare R2, and Google Cloud. Once connected, you can browse, upload, download, and organize your cloud files directly from the WordPress dashboard without switching tabs or using external tools.
 
 = Can I create a ZIP archive of any folder or file and download it? =
 Yes, you can archive any file or folder as a ZIP directly from the plugin interface and download it instantly.
@@ -375,6 +392,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 5.4.9 - February 13, 2026 =
+* Tweak – Updated the Integrations menu by adding new tabs for pCloud, Cloudflare R2, and DigitalOcean Spaces.
+
 = 5.4.8 - February 03, 2026 =
 * Fix – Resolved a script dependency conflict.
 * Improvement - File Manager themes.

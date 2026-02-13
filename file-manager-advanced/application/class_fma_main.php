@@ -40,6 +40,7 @@ class class_fma_main
 		add_action('wp_ajax_fma_review_ajax', array($this, 'fma_review_ajax'));
 		add_action('wp_ajax_fma_save_php_file', array($this, 'fma_save_php_file'));
 		add_action('wp_ajax_fma_debug_php', array($this, 'fma_debug_php'));
+		add_action('wp_ajax_fma_hide_appsumo_banner', array($this, 'fma_hide_appsumo_banner'));
 		$this->settings = get_option('fmaoptions');
 
 		add_action('admin_init', array($this, 'admin_init'));
@@ -260,6 +261,19 @@ class class_fma_main
 
 		// Return JSON response
 		wp_send_json($debug_result);
+	}
+
+	/**
+	 * Hide AppSumo Banner
+	 */
+	public function fma_hide_appsumo_banner()
+	{
+		if (!wp_verify_nonce($_POST['nonce'], 'fmaskey')) {
+			wp_die(__('Security check failed', 'file-manager-advanced'));
+		}
+
+		update_option('fma_appsumo_banner_hide', 'yes');
+		wp_send_json_success();
 	}
 
 	/**

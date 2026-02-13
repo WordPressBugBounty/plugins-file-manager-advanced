@@ -1523,7 +1523,7 @@ HTML;
                 grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
                 gap: 20px;
                 margin-top: 30px;
-                opacity: 0.5;
+                opacity: 0.7;
                 position: relative;
                 pointer-events: none;
                 user-select: none;
@@ -1566,6 +1566,21 @@ HTML;
                 font-size: 16px;
                 font-weight: 600;
                 color: #1d2327;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            
+            .afm-coming-soon-badge {
+                display: inline-block;
+                background: #f0b90b;
+                color: #fff;
+                font-size: 10px;
+                font-weight: 600;
+                text-transform: uppercase;
+                padding: 3px 8px;
+                border-radius: 3px;
+                letter-spacing: 0.5px;
             }
 
             .afm-integration-pro-desc {
@@ -1684,6 +1699,22 @@ HTML;
                         'name' => 'Dropbox',
                         'desc' => 'Easily integrate and manage your Dropbox cloud storage files within the file manager.',
                         'icon' => 'dropbox.svg'
+                    ),
+                    'pcloud' => array(
+                        'name' => 'pCloud',
+                        'desc' => 'Connect and manage your pCloud files directly from the Advanced File Manager.',
+                        'icon' => 'pcloud.svg'
+                    ),
+                    'cloudflarer2' => array(
+                        'name' => 'Cloudflare R2',
+                        'desc' => 'Connect and manage your Cloudflare R2 buckets/files directly from the Advanced File Manager.',
+                        'icon' => 'cloudflarer2.svg'
+                    ),
+                    'digitalocean' => array(
+                        'name' => 'DigitalOcean Spaces',
+                        'desc' => 'Connect and manage your DigitalOcean Spaces buckets/files directly from the Advanced File Manager.',
+                        'icon' => 'digitalocean.svg',
+                        'coming_soon' => true
                     )
                 );
 
@@ -1699,7 +1730,12 @@ HTML;
                             </div>
                         </div>
                         <div class="afm-integration-pro-body">
-                            <h3 class="afm-integration-pro-title"><?php echo $item['name']; ?></h3>
+                            <h3 class="afm-integration-pro-title">
+                                <?php echo $item['name']; ?>
+                                <?php if (isset($item['coming_soon']) && $item['coming_soon']): ?>
+                                    <span class="afm-coming-soon-badge">Coming Soon</span>
+                                <?php endif; ?>
+                            </h3>
                             <p class="afm-integration-pro-desc"><?php echo $item['desc']; ?></p>
                         </div>
                     </div>
