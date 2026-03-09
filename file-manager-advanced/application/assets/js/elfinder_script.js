@@ -362,12 +362,15 @@ jQuery(document).ready(function () {
                             });
                         }
 
-                        // Persistent hover handling for errors using CodeMirror coordinates
+                        // Hover tooltip: CodeMirror coordsChar() "page" mode needs document coords (pageX/pageY)
                         var wrapper = editor.getWrapperElement();
                         jQuery(wrapper).on('mousemove.fma-debug', function (e) {
                             if (!hasErrors || currentErrors.length === 0) return;
 
-                            var coords = editor.coordsChar({ left: e.clientX, top: e.clientY });
+                            var docLeft = e.pageX != null ? e.pageX : (e.clientX + (window.scrollX || document.documentElement.scrollLeft || 0));
+                            var docTop = e.pageY != null ? e.pageY : (e.clientY + (window.scrollY || document.documentElement.scrollTop || 0));
+                            var coords = editor.coordsChar({ left: docLeft, top: docTop }, 'page');
+                            if (coords.outside) return;
                             var error = getErrorForLine(coords.line);
 
                             if (error) {
@@ -413,4 +416,237 @@ jQuery(document).ready(function () {
         },
         workerBaseUrl: afm_object.plugin_url + 'application/library/js/worker/',
     });
+
+    // Override search command to add contentTag parameter for content search (after init)
+    function applyContentSearchOverride(fm) {
+        if (!fm || !fm._commands || !fm._commands.search) return;
+        if (fm._commands.search._fmaContentSearchPatched) return;
+        fm._commands.search._fmaContentSearchPatched = true;
+        var originalSearchExec = fm._commands.search.exec;
+
+            // Override exec method to add contentTag for SearchTag type
+            fm._commands.search.exec = function(q, target, mime, type) {
+                var self = this;
+                var sType = type || '';
+
+                // If SearchTag type, we need to send contentTag parameter
+                if (sType === 'SearchTag' && q) {
+                    var contentTag = q; // Store the tag
+                    var fm = this.fm;
+                    var reqDef = [];
+                    var onlyMimes = fm.options.onlyMimes;
+                    var phash, targetVolids = [];
+
+                    // Custom setType function that encodes tag in q parameter for SearchTag
+                    var setType = function(data) {
+                        if (sType && sType !== 'SearchName' && sType !== 'SearchMime') {
+                            data.type = sType;
+                        }
+                        if (sType === 'SearchTag') {
+                            data.q = '__CONTENT_SEARCH__:' + contentTag;
+                        }
+                        return data;
+                    };
+
+                    var rootCnt;
+
+                    // Process target
+                    if (typeof target == 'object') {
+                        mime = target.mime || '';
+                        target = target.target || '';
+                    }
+                    target = target ? target : '';
+
+                    // Process mimes
+                    if (mime) {
+                        mime = jQuery.trim(mime).replace(',', ' ').split(' ');
+                        if (onlyMimes.length) {
+                            mime = jQuery.map(mime, function(m) {
+                                m = jQuery.trim(m);
+                                return m && (jQuery.inArray(m, onlyMimes) !== -1
+                                    || jQuery.grep(onlyMimes, function(om) { return m.indexOf(om) === 0 ? true : false; }).length
+                                ) ? m : null;
+                            });
+                        }
+                    } else {
+                        mime = [].concat(onlyMimes);
+                    }
+
+                    fm.trigger('searchstart', setType({query: '', target: target, mimes: mime}));
+
+                    if (!onlyMimes.length || mime.length) {
+                        if (target === '' && fm.api >= 2.1) {
+                            rootCnt = Object.keys(fm.roots).length;
+                            jQuery.each(fm.roots, function(id, hash) {
+                                reqDef.push(fm.request({
+                                    data: setType({cmd: 'search', target: hash, mimes: mime}),
+                                    notify: {type: 'search', cnt: 1, hideCnt: (rootCnt > 1 ? false : true)},
+                                    cancel: true,
+                                    preventDone: true
+                                }));
+                            });
+                        } else {
+                            reqDef.push(fm.request({
+                                data: setType({cmd: 'search', target: target, mimes: mime}),
+                                notify: {type: 'search', cnt: 1, hideCnt: true},
+                                cancel: true,
+                                preventDone: true
+                            }));
+                            if (target !== '' && fm.api >= 2.1 && Object.keys(fm.leafRoots).length) {
+                                jQuery.each(fm.leafRoots, function(hash, roots) {
+                                    phash = hash;
+                                    while (phash) {
+                                        if (target === phash) {
+                                            jQuery.each(roots, function() {
+                                                var f = fm.file(this);
+                                                f && f.volumeid && targetVolids.push(f.volumeid);
+                                                reqDef.push(fm.request({
+                                                    data: setType({cmd: 'search', target: this, mimes: mime}),
+                                                    notify: {type: 'search', cnt: 1, hideCnt: false},
+                                                    cancel: true,
+                                                    preventDone: true
+                                                }));
+                                            });
+                                        }
+                                        phash = (fm.file(phash) || {}).phash;
+                                    }
+                                });
+                            }
+                        }
+                    } else {
+                        reqDef = [jQuery.Deferred().resolve({files: []})];
+                    }
+
+                    fm.searchStatus.mixed = (reqDef.length > 1) ? targetVolids : false;
+
+                    return jQuery.when.apply(jQuery, reqDef).done(function(data) {
+                        var argLen = arguments.length, i;
+                        data.warning && fm.error(data.warning);
+                        if (argLen > 1) {
+                            data.files = (data.files || []);
+                            for (i = 1; i < argLen; i++) {
+                                arguments[i].warning && fm.error(arguments[i].warning);
+                                if (arguments[i].files) {
+                                    data.files.push.apply(data.files, arguments[i].files);
+                                }
+                            }
+                        }
+                        data.files && data.files.length && fm.cache(data.files);
+                        fm.lazy(function() {
+                            fm.trigger('search', data);
+                        }).then(function() {
+                            return fm.lazy(function() {
+                                fm.trigger('searchdone');
+                            });
+                        }).then(function() {
+                            data.sync && fm.sync();
+                        });
+                    });
+                } else {
+                    return originalSearchExec.call(self, q, target, mime, type);
+                }
+            };
+    }
+    if (elfinder_object && elfinder_object.length) {
+        var fm = elfinder_object.elfinder('instance');
+        if (fm) {
+            fm.one('init', function() { applyContentSearchOverride(fm); });
+            applyContentSearchOverride(fm);
+        }
+    }
+
+    // When user clears search and presses Enter (or closes search), go back to folder they were in before search
+    if (elfinder_object && elfinder_object.length) {
+        var fm = elfinder_object.elfinder('instance');
+        if (fm) {
+            var cwdBeforeSearch = null;
+            fm.bind('searchstart', function() {
+                var cwd = fm.cwd();
+                if (cwd && cwd.hash) {
+                    cwdBeforeSearch = cwd.hash;
+                }
+            });
+            fm.bind('searchend', function() {
+                if (cwdBeforeSearch && fm.file(cwdBeforeSearch)) {
+                    fm.exec('open', cwdBeforeSearch);
+                }
+                cwdBeforeSearch = null;
+            });
+        }
+    }
+
+    // Add Content search radio button after elFinder is initialized
+    if (elfinder_object && elfinder_object.length) {
+        var fm = elfinder_object.elfinder('instance');
+        if (fm) {
+            var addContentRadioButton = function() {
+                var searchMenu = jQuery('.elfinder-button-search-menu');
+                if (searchMenu.length) {
+                    var namespace = fm.namespace || 'elfinder-';
+                    var id = function(name) {
+                        return namespace + (fm.escape ? fm.escape(name) : name);
+                    };
+
+                    var searchTypeSet = searchMenu.find('.elfinder-search-type');
+                    if (searchTypeSet.length && !searchTypeSet.find('#' + id('SearchTag')).length) {
+                        var tagRadio = jQuery('<input id="' + id('SearchTag') + '" name="serchcol" type="radio" value="SearchTag"/>');
+                        var tagLabel = jQuery('<label for="' + id('SearchTag') + '">Content</label>');
+
+                        searchTypeSet.append(tagRadio).append(tagLabel);
+                        searchTypeSet.buttonset('refresh');
+
+                        // Remember search type when target is "Here", so we can restore only when user had chosen Content then switched to "All"
+                        var lastSearchTypeWhenHere = null;
+
+                        var updateContentState = function() {
+                            var isHere = jQuery('#' + id('SearchFromCwd')).prop('checked');
+                            var tagRadio = jQuery('#' + id('SearchTag'));
+                            var tagLabel = tagRadio.next('label');
+
+                            if (tagRadio.length) {
+                                if (isHere) {
+                                    tagRadio.prop('disabled', false);
+                                    tagLabel.css({'opacity': '1', 'cursor': 'pointer'});
+                                    // Restore Content when switching back to "Here" if it was selected before
+                                    if (lastSearchTypeWhenHere === 'SearchTag') {
+                                        tagRadio.prop('checked', true);
+                                        searchTypeSet.buttonset('refresh');
+                                    }
+                                } else {
+                                    tagRadio.prop('disabled', true);
+                                    tagLabel.css({'opacity': '0.5', 'cursor': 'not-allowed'});
+                                    if (tagRadio.prop('checked')) {
+                                        lastSearchTypeWhenHere = 'SearchTag'; // was Content before switching to All
+                                        jQuery('#' + id('SearchName')).prop('checked', true).trigger('change');
+                                        searchTypeSet.buttonset('refresh');
+                                    }
+                                }
+                            }
+                        };
+
+                        // When user changes search type while target is "Here", remember it
+                        searchMenu.off('change.contentsearch', 'input[name="serchcol"]').on('change.contentsearch', 'input[name="serchcol"]', function() {
+                            if (jQuery('#' + id('SearchFromCwd')).prop('checked')) {
+                                var val = jQuery(this).val();
+                                if (val) lastSearchTypeWhenHere = val;
+                            }
+                        });
+
+                        searchMenu.off('change.contentsearch', 'input[name="serchfrom"]').on('change.contentsearch', 'input[name="serchfrom"]', updateContentState);
+                        updateContentState();
+                    }
+                }
+            };
+
+            jQuery(document).on('click focus', '.elfinder-button-search input[type="text"]', function() {
+                setTimeout(addContentRadioButton, 200);
+            });
+
+            fm.bind('open', function() {
+                setTimeout(addContentRadioButton, 500);
+            });
+
+            setTimeout(addContentRadioButton, 1000);
+        }
+    }
 });

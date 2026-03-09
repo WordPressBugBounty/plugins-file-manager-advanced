@@ -31,6 +31,13 @@ class class_fma_connector {
             require 'library/php/autoload.php';
         }
 
+        // Load custom filesystem driver for content search
+        if (defined('FMAFILEPATH')) {
+            require_once FMAFILEPATH . 'application/class_fma_local_filesystem.php';
+        } else {
+            require_once dirname(__FILE__) . '/class_fma_local_filesystem.php';
+        }
+
         if ( isset( $settings['enable_trash'] ) && ($settings['enable_trash'] == '1' ) ) {
             $trash   = array(
                 'id'            => '1',
@@ -104,7 +111,7 @@ class class_fma_connector {
             'roots' => array(
                 // Items volume
                 array(
-                    'driver'        => 'LocalFileSystem',           // driver for accessing file system (REQUIRED)
+                    'driver'        => 'fma_local_filesystem',           // custom driver with content search support
                     'path'          => $path,                 // path to files (REQUIRED)
                     'URL'           => $url, // URL to files (REQUIRED)
                     'trashHash'     => $trash_f,                     // elFinder's hash of trash folder
@@ -116,6 +123,7 @@ class class_fma_connector {
                     'accessControl' => 'access',
                     'acceptedName'  => current_user_can('manage_options') ? '' : 'afm_plugin_file_validName',
                     'uploadMaxSize' => $max_upload_size,
+                    'searchTimeout' => 300,
                     'attributes'    => array(
                         array(
                             'pattern' => '/.tmb/',
@@ -146,6 +154,7 @@ class class_fma_connector {
             ),
         );
 		$opts['bind']['upload'] = array( $this, 'on_upload_event' );
+		$opts['bind']['search.pre'] = array( $this, 'on_search_command' );
         $opts = apply_filters( 'fma__opts_override', $opts );
 
         // run elFinder
@@ -179,6 +188,36 @@ class class_fma_connector {
 				$svg_sanitizer = new enshrined\svgSanitize\Sanitizer();
 				$file_content  = $svg_sanitizer->sanitize( $file_content );
 				file_put_contents( $file_path, $file_content );
+			}
+		}
+	}
+
+	/**
+	 * Intercept search command to handle content search tag parameter
+	 * This hook is called before the search command executes
+	 * We decode the tag from q parameter which contains special marker
+	 */
+	public function on_search_command( $cmd, &$args, $elfinder, $volume ) {
+		if ( $cmd === 'search' ) {
+			$type = !empty( $args['type'] ) ? $args['type'] : '';
+			$q = !empty( $args['q'] ) ? trim( $args['q'] ) : '';
+
+			// Content search: type is SearchTag and/or q contains our marker
+			if ( $type === 'SearchTag' || strpos( $q, '__CONTENT_SEARCH__:' ) === 0 ) {
+				$tag = '';
+				if ( strpos( $q, '__CONTENT_SEARCH__:' ) === 0 ) {
+					$tag = substr( $q, strlen( '__CONTENT_SEARCH__:' ) );
+				} elseif ( $type === 'SearchTag' && $q !== '' ) {
+					$tag = $q; // default elFinder sends type=SearchTag and q=term (no marker)
+				}
+				if ( $tag !== '' ) {
+					elFinderVolumefma_local_filesystem::setContentSearchTag( $tag );
+					$args['q'] = '';
+				} else {
+					elFinderVolumefma_local_filesystem::setContentSearchTag( '' );
+				}
+			} else {
+				elFinderVolumefma_local_filesystem::setContentSearchTag( '' );
 			}
 		}
 	}

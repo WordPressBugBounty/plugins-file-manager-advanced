@@ -22,7 +22,7 @@ $appsumo_banner_hide = get_option('fma_appsumo_banner_hide', 'no');
             target="_blank"><?php _e('Get Advanced File Manager Pro', 'file-manager-advanced'); ?></a>
     <?php } ?>
     <hr class="wp-header-end">
-    <?php if ('yes' !== $appsumo_banner_hide) { ?>
+    <?php if (!class_exists('file_manager_advanced_shortcode') && 'yes' !== $appsumo_banner_hide) { ?>
             <div class="fma-appsumo-banner" id="fma_appsumo_banner">
                 <div class="fma-appsumo-content">
                     <div class="fma-appsumo-badge">
