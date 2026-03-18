@@ -4,15 +4,13 @@ Tags: file-manager, wp-file-manager, document management, ftp, advance-file-mana
 Requires at least: 4.0
 Tested up to: 6.9.1
 Requires PHP: 7.0
-Stable tag: 5.4.10
+Stable tag: 5.4.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Use Advanced File Manager to manage WordPress files, create archives, and build document libraries—all directly from your WordPress dashboard!
 
 == Description ==
-
-📢 [A Pro version Lifetime Deal is available](https://advancedfilemanager.com/appsumo-lifetime-deal/?utm_source=wp_org&utm_medium=readme&utm_campaign=ltd)⏰
 
 [Buy Pro](https://advancedfilemanager.com/pricing/?utm_source=wp_org&utm_medium=readme&utm_campaign=buy_now) | [Live Demo](https://filemanageradvanced-demo.instawp.xyz/?utm_source=wp_org&utm_medium=readme&utm_campaign=live_demo) | [Documentation](https://advancedfilemanager.com/documentation/?utm_source=wp_org&utm_medium=readme&utm_campaign=documentation) | [Support](https://objectsws.atlassian.net/servicedesk/customer/portal/37)
 
@@ -129,6 +127,13 @@ Below are the key premium features:
 ✔️ **OneDrive:**Use cloud storage integration to manage OneDrive files inside WordPress.
 
 ✔️ **Amazon S3:**Activate cloud storage integration to connect Amazon S3 with WordPress.
+
+✔️ **pCloud:** Seamlessly connect your pCloud account to WordPress and manage, upload, and organize files directly from the File Manager, no external tabs or tools required.
+
+✔️ **Cloudflare R2:** Seamlessly connect your Cloudflare R2 storage to WordPress and manage, upload, and organize files directly from the File Manager, with no external tabs or tools required.
+
+✔️ **Digital Ocean (Coming Soon):** Seamlessly connect your DigitalOcean Spaces account to WordPress and manage, upload, and organize files directly from the File Manager, no external tabs or tools required.
+
 
 ✔️ **pCloud:** Seamlessly connect your pCloud account to WordPress and manage, upload, and organize files directly from the File Manager, no external tabs or tools required.
 
@@ -406,6 +411,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 5.4.11 - March 18, 2026 =
+* Fix – Security enhancement.
 
 = 5.4.10 - March 09, 2026 =
 * Improvement – Added Content search feature in the File manager search bar.  

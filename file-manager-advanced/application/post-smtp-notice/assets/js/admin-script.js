@@ -1,3 +1,33 @@
+// Returns: 'agree' | 'skip' | 'cancel'
+function showConsentModal() {
+    return new Promise( function( resolve ) {
+        var overlay = document.getElementById( 'fma-consent-overlay' );
+        if ( ! overlay ) {
+            resolve( 'cancel' );
+            return;
+        }
+        overlay.classList.add( 'fma-consent-visible' );
+
+        var agreeBtn = document.getElementById( 'fma-consent-agree' );
+        var skipBtn  = document.getElementById( 'fma-consent-skip' );
+        var closeBtn = document.getElementById( 'fma-consent-close' );
+
+        function cleanup() {
+            overlay.classList.remove( 'fma-consent-visible' );
+            agreeBtn.removeEventListener( 'click', onAgree );
+            skipBtn.removeEventListener( 'click', onSkip );
+            closeBtn.removeEventListener( 'click', onClose );
+        }
+        function onAgree()  { cleanup(); resolve( 'agree' ); }
+        function onSkip()   { cleanup(); resolve( 'skip' ); }
+        function onClose()  { cleanup(); resolve( 'cancel' ); }
+
+        agreeBtn.addEventListener( 'click', onAgree );
+        skipBtn.addEventListener( 'click', onSkip );
+        closeBtn.addEventListener( 'click', onClose );
+    } );
+}
+
 ( async function() {
     const buttons = document.querySelectorAll( '.post-smtp-notice-install' );
 
@@ -6,22 +36,30 @@
 
         button.addEventListener( 'click', async function( e ) {
             e.preventDefault();
+
+            var consentGiven = true;
+            if ( ! recommendPostSMTP.hasConsent ) {
+                var choice = await showConsentModal();
+                if ( choice === 'cancel' ) {
+                    return;
+                }
+                consentGiven = ( choice === 'agree' );
+            }
+
             button.setAttribute( 'disabled', 'disabled' );
             
             if( action === 'install-plugin_post-smtp' ) {
                 button.innerHTML = 'Installing...';
 
                 try {
-                    // Send AJAX call for installation
-                    await sendPostSMTPRequest( 'installed' );
+                    await sendPostSMTPRequest( 'installed', consentGiven );
                     
                     const response = await wp.updates.installPlugin( {
                         slug: 'post-smtp'
                     } );
                     
-                    // Plugin Installed, Lets activate immediately!
                     if( response.activateUrl !== undefined && response.install === 'plugin' ) {
-                        await activatePostSMTP( button );
+                        await activatePostSMTP( button, consentGiven );
                     }
                 } catch ( error ) {
                     console.error( error );
@@ -29,23 +67,26 @@
                 }
             }
             if( action === 'activate-plugin_post-smtp' ) {
-                // Send AJAX call for activation
-                await sendPostSMTPRequest( 'activated' );
-                await activatePostSMTP( button );
+                await sendPostSMTPRequest( 'activated', consentGiven );
+                await activatePostSMTP( button, consentGiven );
             }
         } );
     } );
 } )();
 
-// AJAX call function to send request to SMTP server
-const sendPostSMTPRequest = async function( status ) {
+const sendPostSMTPRequest = async function( status, consentGiven ) {
     try {
-        
-        const formData = new URLSearchParams({
+        const params = {
             action: 'post_smtp_request',
             status: status,
             nonce: recommendPostSMTP.ajaxNonce
-        });
+        };
+
+        if ( consentGiven ) {
+            params.grant_consent = '1';
+        }
+
+        const formData = new URLSearchParams( params );
         
         const response = await fetch( recommendPostSMTP.ajaxURL, {
             method: 'POST',
@@ -56,24 +97,22 @@ const sendPostSMTPRequest = async function( status ) {
         });
         
         if( !response.ok ) {
-            const errorText = await response.text();
-            console.error( 'Response error:', errorText );
-            throw new Error( `HTTP ${response.status}: ${errorText}` );
+            throw new Error( 'HTTP ' + response.status );
         }
         
         const data = await response.json();
         
-        if( data.success ) {
-            return true;
-        } else {
-            return false;
+        if ( data.success && consentGiven ) {
+            recommendPostSMTP.hasConsent = true;
         }
+
+        return data.success || false;
     } catch ( error ) {
-        console.error( 'Error sending Post SMTP AJAX request:', error );
+        console.error( 'Post SMTP request error:', error );
     }
 }
 
-const activatePostSMTP = async function( button ) {
+const activatePostSMTP = async function( button, consentGiven ) {
     button.innerHTML = 'Activating...';
 
     const activateResponse = await wp.updates.activatePlugin( {
@@ -83,11 +122,9 @@ const activatePostSMTP = async function( button ) {
     } );
 
     if( activateResponse ) {
-        // Send final AJAX call for activation
-        await sendPostSMTPRequest( 'activated' );
+        await sendPostSMTPRequest( 'activated', consentGiven );
         
         button.innerHTML = 'Activated!';
-        // Redirect after successful activation
         setTimeout(() => {
             window.location.href = recommendPostSMTP.postSMTPURL;
         }, 1000);
@@ -95,6 +132,6 @@ const activatePostSMTP = async function( button ) {
     else {
         button.innerHTML = 'Error!';
     }
-} 
+}
 
 // Notice dismiss functionality removed since admin notice is disabled
