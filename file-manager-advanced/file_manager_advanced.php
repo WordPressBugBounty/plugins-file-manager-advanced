@@ -4,7 +4,7 @@
   Plugin URI: https://wordpress.org/plugins/file-manager-advanced
   Description: Cpanel for files management in wordpress
   Author: wpexpertsio
-  Version: 5.4.11
+  Version: 5.4.12
   Author URI: https://wpexperts.io
   License: GPLv2
 **/
@@ -14,28 +14,6 @@
  *
  * @package Advance File Manager
  */
-
-// Some hosting environments (e.g. locked-down managed hosts) disable core streaming
-// functions like fpassthru(). elFinder and cloud drivers rely on fpassthru() for
-// efficient streaming (PDFs, large files). If it's disabled, PHP removes the
-// internal function, so we provide a safe polyfill here.
-if ( ! function_exists( 'fpassthru' ) ) {
-	function fpassthru( $handle ) {
-		if ( ! is_resource( $handle ) ) {
-			return 0;
-		}
-		$bytes = 0;
-		while ( ! feof( $handle ) ) {
-			$chunk = fread( $handle, 8192 );
-			if ( $chunk === false ) {
-				break;
-			}
-			$bytes += strlen( $chunk );
-			echo $chunk;
-		}
-		return $bytes;
-	}
-}
 
 if ( ! function_exists( 'fma_fs' ) ) {
     // Create a helper function for easy SDK access.
@@ -82,6 +60,7 @@ if ( ! function_exists( 'fma_fs' ) ) {
  * Loading constants
  */
 require_once('constants.php');
+require_once FMAFILEPATH . 'application/fma-elfinder-helpers.php';
 
 /**
  * Cleanup function - Shared by both uninstall and deactivation hooks

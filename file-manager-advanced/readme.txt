@@ -2,9 +2,9 @@
 Contributors: wpexpertsio, saadiqbal
 Tags: file-manager, wp-file-manager, document management, ftp, advance-file-manager
 Requires at least: 4.0
-Tested up to: 6.9.1
+Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 5.4.11
+Stable tag: 5.4.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -411,6 +411,15 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 5.4.12 - June 09, 2026 =
+* Fix – Resolved compatibility issues with WordPress 7.0.
+* Fix – Fixed an issue preventing direct PDF downloads for non-logged-in users.
+* Fix – Resolved the `Cannot redeclare fpassthru()` fatal error.
+* Fix – Corrected strings using an incorrect text domain and updated hard-coded strings for proper localization.
+* Fix – Resolved an issue where the File Manager plugin could modify PHP source code when files were opened and saved through the plugin editor.
+* Fix – Updated the elFinder library to address a security vulnerability.
+
 
 = 5.4.11 - March 18, 2026 =
 * Fix – Security enhancement.

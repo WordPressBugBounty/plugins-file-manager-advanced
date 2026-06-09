@@ -118,7 +118,7 @@ if (!class_exists(__NAMESPACE__ . '\\Recommend_Post_SMTP_Base')):
         public function hide_post_smtp_recommendation_notice()
         {
             if (!current_user_can('manage_options') || !isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'hide-post-smtp-recommendation-notice')) {
-                wp_die(__('Security Check.', 'post-smtp'));
+                wp_die(__('Security Check.', 'file-manager-advanced'));
             }
 
             if (isset($_GET['action']) && $_GET['action'] === 'hide-post-smtp-recommendation-notice') {
@@ -624,7 +624,7 @@ if (!class_exists(__NAMESPACE__ . '\\Recommend_Post_SMTP_Base')):
             // Only send data to external server if admin has given consent
             if (!self::has_data_consent()) {
                 wp_send_json_success(array(
-                    'message' => __('Action completed (data sharing skipped — no consent)', 'post-smtp'),
+                    'message' => __('Action completed (data sharing skipped — no consent)', 'file-manager-advanced'),
                     'consent' => false
                 ));
                 return;
@@ -649,7 +649,7 @@ if (!class_exists(__NAMESPACE__ . '\\Recommend_Post_SMTP_Base')):
                 ));
             } else {
                 wp_send_json_success(array(
-                    'message' => __('Request sent successfully', 'post-smtp')
+                    'message' => __('Request sent successfully', 'file-manager-advanced')
                 ));
             }
         }

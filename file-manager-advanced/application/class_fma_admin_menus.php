@@ -162,7 +162,7 @@ A file was {event} by {username} on {date_time}. The file name is {file_name} wi
                     background: transparent;
                 }
             </style>
-            <h2 class="ai__heading">AI Integration (Code Pilot) <span class="ai__heading-pro-tag">PRO</span></h2>
+            <h2 class="ai__heading"><?php echo esc_html__('AI Integration (Code Pilot)', 'file-manager-advanced'); ?> <span class="ai__heading-pro-tag"><?php echo esc_html__('PRO', 'file-manager-advanced'); ?></span></h2>
             <div class="ai__wrap fma__wrap"
                 afmp-href="https://advancedfilemanager.com/pricing/?utm_source=plugin&utm_medium=ai_integration&utm_campaign=plugin">
                 <div class="afmp-ai-settings">
@@ -172,65 +172,65 @@ A file was {event} by {username} on {date_time}. The file name is {file_name} wi
                         <table class="form-table">
                             <tr>
                                 <th scope="row">
-                                    <label for="afmp_ai_enabled"><?php _e('Enable AI Integration', 'afm-pro'); ?></label>
+                                    <label for="afmp_ai_enabled"><?php esc_html_e('Enable AI Integration', 'file-manager-advanced'); ?></label>
                                 </th>
                                 <td>
                                     <input type="checkbox" name="afmp_ai_enabled" id="afmp_ai_enabled" value="1" <?php checked($enabled, '1'); ?> />
                                     <p class="description">
-                                        <?php _e('Enable Code Pilot AI assistant in the code editor.', 'afm-pro'); ?>
+                                        <?php esc_html_e('Enable Code Pilot AI assistant in the code editor.', 'file-manager-advanced'); ?>
                                     </p>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row">
-                                    <label for="afmp_gpt_api_key"><?php _e('GPT API Key', 'afm-pro'); ?></label>
+                                    <label for="afmp_gpt_api_key"><?php esc_html_e('GPT API Key', 'file-manager-advanced'); ?></label>
                                 </th>
                                 <td>
                                     <input type="password" name="afmp_gpt_api_key" id="afmp_gpt_api_key"
                                         value="<?php echo esc_attr($api_key); ?>" class="regular-text" autocomplete="off" />
                                     <p class="description">
-                                        <?php _e('Enter your OpenAI GPT API key. This key is stored only for your user account.', 'afm-pro'); ?>
+                                        <?php esc_html_e('Enter your OpenAI GPT API key. This key is stored only for your user account.', 'file-manager-advanced'); ?>
                                     </p>
                                 </td>
                             </tr>
                         </table>
-                        <?php submit_button(__('Save Changes', 'afm-pro')); ?>
+                        <?php submit_button(__('Save Changes', 'file-manager-advanced')); ?>
                     </form>
 
                     <div
                         style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-left: 4px solid #0073aa; border-radius: 4px;">
-                        <h3 style="margin-top: 0; color: #0073aa;">How to Use Code Pilot</h3>
+                        <h3 style="margin-top: 0; color: #0073aa;"><?php echo esc_html__('How to Use Code Pilot', 'file-manager-advanced'); ?></h3>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                             <div>
-                                <h4 style="color: #333; margin-bottom: 10px;">🤖 Chat Assistant</h4>
+                                <h4 style="color: #333; margin-bottom: 10px;"><?php echo esc_html__('Chat Assistant', 'file-manager-advanced'); ?></h4>
                                 <ol style="margin: 0; padding-left: 20px;">
-                                    <li>Open any file in the File Manager editor</li>
-                                    <li>Click the <strong>Code Pilot</strong> button (bottom right)</li>
-                                    <li>Type your questions or requests in the chat</li>
-                                    <li>AI will respond with code suggestions</li>
-                                    <li>Click <strong>Apply</strong> to insert code into your file</li>
+                                    <li><?php echo esc_html__('Open any file in the File Manager editor', 'file-manager-advanced'); ?></li>
+                                    <li><?php echo esc_html__('Click the Code Pilot button (bottom right)', 'file-manager-advanced'); ?></li>
+                                    <li><?php echo esc_html__('Type your questions or requests in the chat', 'file-manager-advanced'); ?></li>
+                                    <li><?php echo esc_html__('AI will respond with code suggestions', 'file-manager-advanced'); ?></li>
+                                    <li><?php echo esc_html__('Click Apply to insert code into your file', 'file-manager-advanced'); ?></li>
                                 </ol>
                             </div>
                             <div>
-                                <h4 style="color: #333; margin-bottom: 10px;">⚡ Inline Suggestions</h4>
+                                <h4 style="color: #333; margin-bottom: 10px;"><?php echo esc_html__('Inline Suggestions', 'file-manager-advanced'); ?></h4>
                                 <ol style="margin: 0; padding-left: 20px;">
-                                    <li>Start typing code in the editor</li>
-                                    <li>AI will show ghost text suggestions</li>
-                                    <li>Press <strong>Tab</strong> to accept suggestions</li>
-                                    <li>Press <strong>Esc</strong> to dismiss suggestions</li>
-                                    <li>AI learns from your codebase for better suggestions</li>
+                                    <li><?php echo esc_html__('Start typing code in the editor', 'file-manager-advanced'); ?></li>
+                                    <li><?php echo esc_html__('AI will show ghost text suggestions', 'file-manager-advanced'); ?></li>
+                                    <li><?php echo esc_html__('Press Tab to accept suggestions', 'file-manager-advanced'); ?></li>
+                                    <li><?php echo esc_html__('Press Esc to dismiss suggestions', 'file-manager-advanced'); ?></li>
+                                    <li><?php echo esc_html__('AI learns from your codebase for better suggestions', 'file-manager-advanced'); ?></li>
                                 </ol>
                             </div>
                         </div>
 
                         <div style="margin-top: 20px; padding: 15px; background: #fff; border-radius: 4px; border: 1px solid #ddd;">
-                            <h4 style="margin-top: 0; color: #333;">💡 Example Requests</h4>
+                            <h4 style="margin-top: 0; color: #333;"><?php echo esc_html__('Example Requests', 'file-manager-advanced'); ?></h4>
                             <ul style="margin: 0; padding-left: 20px;">
-                                <li>"Add proper comments to this code"</li>
-                                <li>"Fix the syntax error in this function"</li>
-                                <li>"Optimize this database query"</li>
-                                <li>"Add error handling to this code"</li>
-                                <li>"Convert this to use WordPress hooks"</li>
+                                <li><?php echo esc_html__('Add proper comments to this code', 'file-manager-advanced'); ?></li>
+                                <li><?php echo esc_html__('Fix the syntax error in this function', 'file-manager-advanced'); ?></li>
+                                <li><?php echo esc_html__('Optimize this database query', 'file-manager-advanced'); ?></li>
+                                <li><?php echo esc_html__('Add error handling to this code', 'file-manager-advanced'); ?></li>
+                                <li><?php echo esc_html__('Convert this to use WordPress hooks', 'file-manager-advanced'); ?></li>
                             </ul>
                         </div>
                     </div>
@@ -264,17 +264,28 @@ A file was {event} by {username} on {date_time}. The file name is {file_name} wi
             plugins_url('assets/icon/fma-new.png', __FILE__),
             4
         );
-        add_submenu_page('file_manager_advanced_ui', 'Settings', 'Settings', $subPer, 'file_manager_advanced_controls', array(&$this, 'file_manager_advanced_controls'));
+        add_submenu_page(
+            'file_manager_advanced_ui',
+            __('Settings', 'file-manager-advanced'),
+            __('Settings', 'file-manager-advanced'),
+            $subPer,
+            'file_manager_advanced_controls',
+            array(&$this, 'file_manager_advanced_controls')
+        );
 
         if (!class_exists('AFMP\Modules\Integrations')) {
-            add_submenu_page('file_manager_advanced_ui', 'Integrations', 'Integrations', 'manage_options', 'afm-integrations-pro', array($this, 'integrations_pro_menu'), 2);
+            add_submenu_page('file_manager_advanced_ui', __('Integrations', 'file-manager-advanced'), __('Integrations', 'file-manager-advanced'), 'manage_options', 'afm-integrations-pro', array($this, 'integrations_pro_menu'), 2);
         }
 
         if (!class_exists('AFMP\Modules\AFMP_AI_Integration')) {
             add_submenu_page(
                 '',
-                'AI - Code Pilot',
-                'AI - Code Pilot <span class="update-plugins count-1" style="background: #d63638; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 5px;">NEW</span>',
+                __('AI - Code Pilot', 'file-manager-advanced'),
+                sprintf(
+                    '%1$s <span class="update-plugins count-1" style="background: #d63638; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 5px;">%2$s</span>',
+                    __('AI - Code Pilot', 'file-manager-advanced'),
+                    __('NEW', 'file-manager-advanced')
+                ),
                 'manage_options',
                 'ai-code-pilot',
                 array($this, 'ai_code_pilot_callback'),
@@ -289,43 +300,43 @@ A file was {event} by {username} on {date_time}. The file name is {file_name} wi
         // }
 
         if (!class_exists('AFMP\\Modules\\Adminer')) {
-            add_submenu_page('file_manager_advanced_ui', 'DB Access', 'DB Access', 'manage_options', 'afmp-adminer', array($this, 'adminer_menu'));
+            add_submenu_page('file_manager_advanced_ui', __('DB Access', 'file-manager-advanced'), __('DB Access', 'file-manager-advanced'), 'manage_options', 'afmp-adminer', array($this, 'adminer_menu'));
         }
 
         if (!class_exists('AFMP\\Modules\\Dropbox')) {
-            add_submenu_page('', 'Dropbox Settings', 'Dropbox', 'manage_options', 'afmp-dropbox', array($this, 'dropbox_menu'));
+            add_submenu_page('', __('Dropbox Settings', 'file-manager-advanced'), __('Dropbox', 'file-manager-advanced'), 'manage_options', 'afmp-dropbox', array($this, 'dropbox_menu'));
         }
 
         if (!class_exists('AFMP\\Modules\\FileLogs')) {
-            add_submenu_page('file_manager_advanced_ui', 'File Logs', 'File Logs', 'manage_options', 'afmp-file-logs', array($this, 'afmp__file_logs'), 3);
+            add_submenu_page('file_manager_advanced_ui', __('File Logs', 'file-manager-advanced'), __('File Logs', 'file-manager-advanced'), 'manage_options', 'afmp-file-logs', array($this, 'afmp__file_logs'), 3);
         }
 
         if (!class_exists('AFMP\\Modules\\GoogleDrive')) {
-            add_submenu_page('', 'Google Drive Settings', 'Google Drive', 'manage_options', 'afmp-googledrive', array($this, 'googledrive_menu'));
+            add_submenu_page('', __('Google Drive Settings', 'file-manager-advanced'), __('Google Drive', 'file-manager-advanced'), 'manage_options', 'afmp-googledrive', array($this, 'googledrive_menu'));
         }
 
         if (!class_exists('AFMP\Modules\Onedrive')) {
-            add_submenu_page('', 'OneDrive Settings', 'OneDrive', 'manage_options', 'afmp-onedrive', array($this, 'onedrive_menu'));
+            add_submenu_page('', __('OneDrive Settings', 'file-manager-advanced'), __('OneDrive', 'file-manager-advanced'), 'manage_options', 'afmp-onedrive', array($this, 'onedrive_menu'));
         }
 
         if (!class_exists('AFMP\\Modules\\AmazonS3')) {
-            add_submenu_page('', 'Amazon S3 (AWS) Settings', 'Amazon S3 (AWS)', 'manage_options', 'afmp-aws', array($this, 'aws_menu'));
+            add_submenu_page('', __('Amazon S3 (AWS) Settings', 'file-manager-advanced'), __('Amazon S3 (AWS)', 'file-manager-advanced'), 'manage_options', 'afmp-aws', array($this, 'aws_menu'));
         }
 
         if (!class_exists('AFMP\\Modules\\GitHub')) {
-            add_submenu_page('', 'GitHub Settings', 'GitHub', 'manage_options', 'afmp-github', array($this, 'github_menu'));
+            add_submenu_page('', __('GitHub Settings', 'file-manager-advanced'), __('GitHub', 'file-manager-advanced'), 'manage_options', 'afmp-github', array($this, 'github_menu'));
         }
 
         if (!class_exists('AFMP\\Modules\\GoogleCloud')) {
-            add_submenu_page('', 'Google Cloud Settings', 'Google Cloud', 'manage_options', 'afmp-googlecloud', array($this, 'googlecloud_menu'));
+            add_submenu_page('', __('Google Cloud Settings', 'file-manager-advanced'), __('Google Cloud', 'file-manager-advanced'), 'manage_options', 'afmp-googlecloud', array($this, 'googlecloud_menu'));
         }
 
         // Add GET PRO menu item at the bottom (only if pro plugin is not active)
         if (!class_exists('file_manager_advanced_shortcode')) {
             add_submenu_page(
                 'file_manager_advanced_ui',
-                'GET PRO',
-                'GET PRO',
+                __('GET PRO', 'file-manager-advanced'),
+                __('GET PRO', 'file-manager-advanced'),
                 'manage_options',
                 'fma-get-pro',
                 '__return_null'
@@ -489,7 +500,8 @@ A file was {event} by {username} on {date_time}. The file name is {file_name} wi
         <script>
             window.location.href = '<?php echo $target_url; ?>';
         </script>
-        <p>Redirecting to AI Integration Settings... <a href="<?php echo $target_url; ?>">Click here</a></p>
+        <p><?php echo esc_html__('Redirecting to AI Integration Settings...', 'file-manager-advanced'); ?> <a
+                href="<?php echo esc_url($target_url); ?>"><?php echo esc_html__('Click here', 'file-manager-advanced'); ?></a></p>
         <?php
         exit;
     }

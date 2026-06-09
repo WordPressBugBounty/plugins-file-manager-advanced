@@ -65,11 +65,6 @@ class class_fma_main
 	 */
 	public function fma_load_fma_ui()
 	{
-		// Handle unescaping for file save operations before passing to connector
-		if (isset($_POST['cmd']) && $_POST['cmd'] === 'put' && isset($_POST['content'])) {
-			$_POST['content'] = wp_unslash($_POST['content']);
-		}
-
 		include 'class_fma_connector.php';
 		$fma_connector = new class_fma_connector();
 		if (wp_verify_nonce($_REQUEST['_fmakey'], 'fmaskey')) {
@@ -158,7 +153,7 @@ class class_fma_main
 			);
 			// Enqueue SMTP scripts if we are on the settings page
 			if ($hook === 'file-manager_page_file_manager_advanced_controls' && $this->recommend_smtp) {
-				$this->recommend_smtp->admin_enqueue_scripts();
+				$this->recommend_smtp->admin_enqueue_scripts(); 
 			}
 		}
 	}
@@ -229,7 +224,14 @@ class class_fma_main
 	public function admin_init()
 	{
 		$is_pro_version = get_option('active_plugins', array());
-		if (in_array('file-manager-advanced-pro/file-manager-advanced-shortcode.php', $is_pro_version, true)) {
+		$is_pro_active = false;
+		foreach ($is_pro_version as $plugin_file) {
+			if (is_string($plugin_file) && preg_match('#/file-manager-advanced-shortcode\.php$#', $plugin_file)) {
+				$is_pro_active = true;
+				break;
+			}
+		}
+		if ($is_pro_active) {
 			require_once FMAFILEPATH . 'application/logs/class-filelogs.php';
 		}
 	}
@@ -289,7 +291,8 @@ class class_fma_main
 			$_POST = array(
 				'cmd' => 'put',
 				'target' => $file_hash,
-				'content' => $php_code, // Already unslashed above
+				// Pass raw content: elFinder does not stripslashes on modern PHP; wp_slash() corrupts \" sequences.
+				'content' => $php_code,
 				'action' => 'fma_load_fma_ui',
 				'_fmakey' => wp_create_nonce('fmaskey')
 			);
@@ -372,10 +375,10 @@ class class_fma_main
 			return;
 		}
 
-		// Check if this is a file content save operation
-		if (isset($_POST['cmd']) && $_POST['cmd'] === 'put' && isset($_POST['content'])) {
-			// Remove slashes from content before elFinder processes it
-			$_POST['content'] = wp_unslash($_POST['content']);
+		// WordPress slashes $_POST; elFinder only stripslashes when magic_quotes_gpc (removed in PHP 5.4+).
+		if (isset($_POST['cmd']) && 'put' === $_POST['cmd'] && isset($_POST['content']) && is_string($_POST['content'])) {
+			$_POST['content']    = wp_unslash($_POST['content']);
+			$_REQUEST['content'] = $_POST['content'];
 		}
 	}
 

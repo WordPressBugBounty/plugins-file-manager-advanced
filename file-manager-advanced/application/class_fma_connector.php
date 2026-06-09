@@ -158,7 +158,7 @@ class class_fma_connector {
         $opts = apply_filters( 'fma__opts_override', $opts );
 
         // run elFinder
-        $fma_connector = new elFinderConnector( new elFinder( $opts ) );
+        $fma_connector = fma_create_elfinder_connector(new elFinder($opts));
         try {
             $fma_connector->run();
             die;

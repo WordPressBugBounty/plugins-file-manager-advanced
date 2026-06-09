@@ -134,7 +134,7 @@ Install Post SMTP — trusted by 400,000+ websites for reliable delivery, detail
      */
     public function hide_post_smtp_recommendation_notice() {
         if( ! current_user_can( 'manage_options' ) || ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'hide-post-smtp-recommendation-notice' ) ) {
-            wp_die( __( 'Security Check.', 'post-smtp' ) );
+            wp_die( __( 'Security Check.', 'file-manager-advanced' ) );
         }
 
         if( isset( $_GET['action'] ) && $_GET['action'] === 'hide-post-smtp-recommendation-notice' ) {
@@ -221,7 +221,7 @@ Install Post SMTP — trusted by 400,000+ websites for reliable delivery, detail
     public function request_post_smtp( $request ) {
         if ( ! \RecommendPostSMTP\Base\Recommend_Post_SMTP_Base::has_data_consent() ) {
             wp_send_json_success( array(
-                'message' => __( 'Action completed (data sharing skipped — no consent)', 'post-smtp' ),
+                'message' => __( 'Action completed (data sharing skipped — no consent)', 'file-manager-advanced' ),
                 'consent' => false
             ) );
             return;
@@ -241,7 +241,7 @@ Install Post SMTP — trusted by 400,000+ websites for reliable delivery, detail
         ) );
 
         wp_send_json_success( array(
-            'message' => __( 'Request sent successfully', 'post-smtp' )
+            'message' => __( 'Request sent successfully', 'file-manager-advanced' )
         ) );
     }
 
