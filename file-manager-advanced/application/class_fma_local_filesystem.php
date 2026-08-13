@@ -327,4 +327,35 @@ class elFinderVolumefma_local_filesystem extends elFinderVolumeLocalFileSystem {
 
         return $result;
     }
+
+    /**
+     * Skip hidden items when scanning children for paste/move pre-checks.
+     *
+     * elFinder's copy() loop already ignores hidden files, but paste() calls
+     * closest('read', false) first and walks every child — including hidden
+     * .htaccess (read=false when "Display .htaccess?" is off). That blocked
+     * entire folder copy with "Permission denied".
+     *
+     * Exception: when looking for locked=true (rm/archive safety), do NOT skip
+     * hidden items — restricted .php files are hidden+locked and must block
+     * recursive delete / archive (AFM-885).
+     *
+     * @param string $path Directory path.
+     * @param string $attr Attribute name.
+     * @param bool   $val  Attribute value to match.
+     * @return string|false
+     */
+    protected function childsByAttr($path, $attr, $val)
+    {
+        foreach ($this->scandirCE($path) as $p) {
+            $stat = $this->stat($p);
+            if ('locked' !== $attr && !empty($stat['hidden'])) {
+                continue;
+            }
+            if (($_p = $this->closestByAttr($p, $attr, $val)) != false) {
+                return $_p;
+            }
+        }
+        return false;
+    }
 }

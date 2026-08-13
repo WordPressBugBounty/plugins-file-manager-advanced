@@ -329,6 +329,11 @@ jQuery(document).ready(function () {
         lang: fma_locale,
         ui: afm_object.ui,
         commandsOptions: {
+            // AFM-935: do not rewrite integration stream URLs (admin-ajax stream
+            // endpoints) into connector POST cmd=file during open/preview.
+            open: {
+                method: 'get'
+            },
             edit: {
                 mimes: [],
                 editors: [{

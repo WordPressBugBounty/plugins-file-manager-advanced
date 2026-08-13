@@ -90,7 +90,19 @@ if ( ! class_exists( 'AFMP\\Modules\\FileLogs' ) ) :
          * @param string    $action Action performed (added, removed, etc.).
          */
 		private function check_performed_action( $cmd, $elfinder, $file, $action = '' ) {
-			$file_path = 'removed' === $action ? $file['realpath'] : $elfinder->realpath( $file['hash'] );
+			if ( ! is_array( $file ) ) {
+				return;
+			}
+
+			if ( 'removed' === $action ) {
+				$file_path = isset( $file['realpath'] ) ? $file['realpath'] : '';
+			} else {
+				$file_path = ( ! empty( $file['hash'] ) && is_object( $elfinder ) ) ? $elfinder->realpath( $file['hash'] ) : '';
+			}
+
+			if ( empty( $file_path ) || ! is_string( $file_path ) ) {
+				return;
+			}
 
 			switch ( $cmd ) {
 				case 'rename':
@@ -108,7 +120,7 @@ if ( ! class_exists( 'AFMP\\Modules\\FileLogs' ) ) :
 					break;
 				case 'rm':
 					FileLogModel::insert_item( 'deleted', $file_path, $file );
-                    break;
+					break;
 				case 'paste':
 					FileLogModel::insert_item( 'pasted', $file_path, $file );
 					break;

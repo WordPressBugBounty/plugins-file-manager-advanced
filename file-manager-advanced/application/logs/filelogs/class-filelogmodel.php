@@ -144,12 +144,21 @@ if ( ! class_exists( 'AFMP\\Modules\\FileLogs\\FileLogModel' ) ) :
 		 * @return int
 		 */
 		public static function insert_item( $action, $path, $args ) {
+			if ( empty( $path ) || ! is_string( $path ) ) {
+				return 0;
+			}
+
+			if ( ! is_array( $args ) ) {
+				$args = array();
+			}
+
 			$filelog = new self();
 
 			$filelog->user_id = get_current_user_id();
-			$filelog->action  = $action;
-			$filelog->path    = $path;
-			$filelog->type    = $args['mime'];
+			$filelog->action  = sanitize_text_field( $action );
+			// Column is VARCHAR(255); truncate to avoid DB warnings on deep paths.
+			$filelog->path    = substr( $path, 0, 255 );
+			$filelog->type    = isset( $args['mime'] ) ? sanitize_text_field( $args['mime'] ) : '';
 			$filelog->ip      = self::get_client_ip();
 			$filelog->time    = current_time( 'timestamp' );
 

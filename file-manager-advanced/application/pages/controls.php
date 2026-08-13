@@ -22,6 +22,7 @@ $cm_themes = class_fma_main::cm_themes();
     <a href="https://advancedfilemanager.com/documentation/" class="page-title-action" target="_blank">
         <?php _e('Documentation', 'file-manager-advanced'); ?>
     </a>
+    <?php echo class_fma_main::review_header_line_html(); ?>
     <hr class="wp-header-end">
     <?php
     echo class_fma_admin_menus::shortcodeUpdateNotice();
@@ -93,17 +94,6 @@ $cm_themes = class_fma_main::cm_themes();
                 do_action('fma__settings_tab_' . $active_tab . '_content');
             } else {
                 ?>
-                
-
-                
-                <p style="width:100%; text-align:right;" class="description">
-                    <span
-                        id="thankyou"><?php _e('Thank you for using <a href="https://wordpress.org/plugins/file-manager-advanced/">File Manager Advanced</a>. If happy then ', 'file-manager-advanced') ?>
-                        <a href="https://wordpress.org/support/plugin/file-manager-advanced/reviews/?filter=5"><?php _e('Rate Us', 'file-manager-advanced') ?>
-                            <img src="<?php echo plugins_url('images/5stars.png', __FILE__); ?>"
-                                style="width:100px; top: 11px; position: relative;"></a></span>
-                </p>
-                
                 <form action="<?php echo admin_url('admin.php?page=file_manager_advanced_controls'); ?>" method="post">
                     <?php wp_nonce_field('fmaform', '_fmaform'); ?>
                     <table class="form-table">

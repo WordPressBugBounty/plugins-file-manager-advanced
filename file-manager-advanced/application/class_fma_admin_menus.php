@@ -1345,48 +1345,14 @@ HTML;
      */
     public function fmaPer()
     {
-        $settings = $this->get();
-        $user = wp_get_current_user();
-        $allowed_fma_user_roles = isset($settings['fma_user_roles']) ? $settings['fma_user_roles'] : array('administrator');
-
-        if (!in_array('administrator', $allowed_fma_user_roles)) {
-            $fma_user_roles = array_merge(array('administrator'), $allowed_fma_user_roles);
-        } else {
-            $fma_user_roles = $allowed_fma_user_roles;
-        }
-
-        $checkUserRoleExistance = array_intersect($fma_user_roles, $user->roles);
-
-        if (count($checkUserRoleExistance) > 0 && !in_array('administrator', $checkUserRoleExistance)) {
-            $fmaPer = 'read';
-        } else {
-            $fmaPer = 'manage_options';
-        }
-        return $fmaPer;
+        return class_fma_permissions::get_fma_capability();
     }
     /**
      * Fma - Network Permissions
      */
     public function networkPer()
     {
-        $settings = $this->get();
-        $user = wp_get_current_user();
-        $allowed_fma_user_roles = isset($settings['fma_user_roles']) ? $settings['fma_user_roles'] : array();
-
-        $fma_user_roles = $allowed_fma_user_roles;
-
-        $checkUserRoleExistance = array_intersect($fma_user_roles, $user->roles);
-
-        if (count($checkUserRoleExistance) > 0) {
-            if (!in_array('administrator', $checkUserRoleExistance)) {
-                $fmaPer = 'read';
-            } else {
-                $fmaPer = 'manage_options';
-            }
-        } else {
-            $fmaPer = 'manage_network';
-        }
-        return $fmaPer;
+        return class_fma_permissions::get_network_capability();
     }
     /**
      * Diaplying AFM

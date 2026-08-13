@@ -60,7 +60,7 @@ if (class_fma_main::has_pro()) {
             </span>
             <span id="thankyou">
                 <?php _e('Thank you for using <a href="https://wordpress.org/plugins/file-manager-advanced/">Advanced File Manager</a>. If you are happy then please ', 'file-manager-advanced'); ?>
-                <a href="https://wordpress.org/support/plugin/file-manager-advanced/reviews/?filter=5"><?php _e('Rate Us', 'file-manager-advanced') ?>
+                <a href="https://wordpress.org/support/plugin/file-manager-advanced/reviews/?filter=5"><?php _e(' Rate Us', 'file-manager-advanced') ?>
                     <img src="<?php echo plugins_url('images/5stars.png', __FILE__); ?>"
                         style="width:100px; top: 11px; position: relative;"></a>
             </span>

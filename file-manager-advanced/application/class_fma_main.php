@@ -40,11 +40,10 @@ class class_fma_main
 		add_action('wp_ajax_fma_review_ajax', array($this, 'fma_review_ajax'));
 		add_action('wp_ajax_fma_save_php_file', array($this, 'fma_save_php_file'));
 		add_action('wp_ajax_fma_debug_php', array($this, 'fma_debug_php'));
+		add_action('admin_footer', array($this, 'maybe_inject_review_header_line'));
 		$this->settings = get_option('fmaoptions');
 
 		add_action('admin_init', array($this, 'admin_init'));
-		// Hook into WordPress to handle slashes in POST data for elFinder
-		add_action('init', array($this, 'handle_elfinder_post_data'));
 
 		// Initialize SMTP recommendation
 		$this->init_smtp_recommendation();
@@ -65,11 +64,21 @@ class class_fma_main
 	 */
 	public function fma_load_fma_ui()
 	{
+		// Clear any buffered output so file/download streams stay binary-clean.
+		while (ob_get_level()) {
+			ob_end_clean();
+		}
+
+		class_fma_permissions::verify_ajax_access();
+
+		$fmakey = isset($_REQUEST['_fmakey']) ? sanitize_text_field(wp_unslash($_REQUEST['_fmakey'])) : '';
+		if ('' === $fmakey || !wp_verify_nonce($fmakey, 'fmaskey')) {
+			wp_die(esc_html__('Security check failed', 'file-manager-advanced'), esc_html__('Forbidden', 'file-manager-advanced'), array('response' => 403));
+		}
+
 		include 'class_fma_connector.php';
 		$fma_connector = new class_fma_connector();
-		if (wp_verify_nonce($_REQUEST['_fmakey'], 'fmaskey')) {
-			$fma_connector->fma_local_file_system();
-		}
+		$fma_connector->fma_local_file_system();
 	}
 
 	/**
@@ -102,6 +111,7 @@ class class_fma_main
 				wp_enqueue_style('elfinder.styles', FMA_PLUGIN_URL . 'application/assets/css/custom_style_filemanager_advanced.css', array(), FMA_VERSION, 'all');
 
 				wp_enqueue_script('elfinder', $library_url . 'js/elfinder.min.js', array('jquery', 'jquery-ui-core', 'jquery-ui-selectable', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-resizable', 'jquery-ui-dialog', 'jquery-ui-slider', 'jquery-ui-tabs'), FMA_VERSION, true);
+				wp_enqueue_script('fma-elfinder-security', FMA_PLUGIN_URL . 'application/assets/js/fma-elfinder-security.js', array('jquery', 'elfinder'), FMA_VERSION, true);
 				wp_enqueue_script('codemirror', $library_url . 'codemirror/lib/codemirror.js', array(), FMA_VERSION, true);
 				wp_enqueue_script('codemirror.htmlmixed', $library_url . 'codemirror/mode/htmlmixed/htmlmixed.js', array(), FMA_VERSION, true);
 				wp_enqueue_script('codemirror.xml', $library_url . 'codemirror/mode/xml/xml.js', array(), FMA_VERSION, true);
@@ -118,8 +128,8 @@ class class_fma_main
 					wp_enqueue_style('codemirror.theme', $library_url . 'codemirror/theme/' . $cm_theme . '.css', array(), FMA_VERSION, 'all');
 				}
 
-				wp_enqueue_script('fma-elfinder-commands', FMA_PLUGIN_URL . 'application/assets/js/fma-elfinder-commands.js', array('jquery', 'elfinder'), FMA_VERSION, true);
-				wp_enqueue_script('elfinder.script', FMA_PLUGIN_URL . 'application/assets/js/elfinder_script.js', array('jquery', 'fma-elfinder-commands'), FMA_VERSION, true);
+				wp_enqueue_script('fma-elfinder-commands', FMA_PLUGIN_URL . 'application/assets/js/fma-elfinder-commands.js', array('jquery', 'elfinder', 'fma-elfinder-security'), FMA_VERSION, true);
+				wp_enqueue_script('elfinder.script', FMA_PLUGIN_URL . 'application/assets/js/elfinder_script.js', array('jquery', 'fma-elfinder-security', 'fma-elfinder-commands'), FMA_VERSION, true);
 				wp_localize_script(
 					'elfinder.script',
 					'afm_object',
@@ -197,6 +207,112 @@ class class_fma_main
 	}
 
 	/**
+	 * Thank-you / Rate Us line used in AFM admin headers.
+	 *
+	 * @return string
+	 */
+	public static function review_header_line_html() {
+		$img = plugins_url( 'images/5stars.png', FMAFILEPATH . 'application/pages/main.php' );
+		return sprintf(
+			'<span id="thankyou" class="fma-header-review description">%s<a class="fma-header-review-rate" href="%s" target="_blank" rel="noopener noreferrer">%s <img src="%s" alt=""></a></span>',
+			wp_kses_post( __( 'Thank you for using <a href="https://wordpress.org/plugins/file-manager-advanced/">File Manager Advanced</a>. If happy then ', 'file-manager-advanced' ) ),
+			esc_url( 'https://wordpress.org/support/plugin/file-manager-advanced/reviews/?filter=5' ),
+			esc_html__( ' Rate Us', 'file-manager-advanced' ),
+			esc_url( $img )
+		);
+	}
+
+	/**
+	 * Show the Rate Us line in the header on AFM pages except the main File Manager screen.
+	 */
+	public function maybe_inject_review_header_line() {
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		$page      = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+		$post_type = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : '';
+
+		if ( 'file_manager_advanced_ui' === $page ) {
+			return;
+		}
+
+		$is_afm = false;
+		if ( '' !== $page && (
+			0 === strpos( $page, 'file_manager_advanced' )
+			|| 0 === strpos( $page, 'afmp-' )
+			|| 0 === strpos( $page, 'fma_shortcode' )
+			|| 'afm-integrations-pro' === $page
+		) ) {
+			$is_afm = true;
+		}
+		if ( 'fma_shortcode' === $post_type ) {
+			$is_afm = true;
+		}
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( $screen && isset( $screen->post_type ) && 'fma_shortcode' === $screen->post_type ) {
+			$is_afm = true;
+		}
+
+		if ( ! $is_afm ) {
+			return;
+		}
+
+		$html = self::review_header_line_html();
+		?>
+		<style>
+			.wrap .fma-header-review {
+				float: right;
+				margin: 0;
+				padding: 6px 0 0;
+				line-height: 1.4;
+				white-space: nowrap;
+			}
+			.wrap .fma-header-review a {
+				text-decoration: none;
+			}
+			.wrap .fma-header-review .fma-header-review-rate {
+				display: inline-flex;
+				align-items: center;
+				gap: 4px;
+				vertical-align: middle;
+			}
+			.wrap .fma-header-review img {
+				width: 100px;
+				height: auto;
+				vertical-align: middle;
+			}
+		</style>
+		<script>
+		jQuery(function ($) {
+			if ($('.fma-header-review').length) {
+				return;
+			}
+			var $wrap = $('.wrap').first();
+			var $h = $wrap.children('h1').first();
+			if (!$h.length) {
+				$h = $wrap.children('h2').first();
+			}
+			if (!$h.length) {
+				return;
+			}
+			$h.addClass('wp-heading-inline');
+			var html = <?php echo wp_json_encode( $html ); ?>;
+			var $lastAction = $h.nextAll('.page-title-action').last();
+			if ($lastAction.length) {
+				$lastAction.after(html);
+			} else {
+				$h.after(html);
+			}
+			if (!$h.nextAll('hr.wp-header-end').length) {
+				$wrap.find('.fma-header-review').first().after('<hr class="wp-header-end">');
+			}
+		});
+		</script>
+		<?php
+	}
+
+	/**
 	 * Review Ajax
 	 */
 	public function fma_review_ajax()
@@ -245,6 +361,8 @@ class class_fma_main
 	 */
 	public function fma_debug_php()
 	{
+		class_fma_permissions::verify_ajax_access();
+
 		// Check nonce for security
 		if (!wp_verify_nonce($_POST['nonce'], 'fmaskey')) {
 			wp_die(__('Security check failed', 'file-manager-advanced'));
@@ -269,14 +387,20 @@ class class_fma_main
 	 */
 	public function fma_save_php_file()
 	{
+		if (!class_fma_permissions::user_has_file_manager_access()) {
+			wp_send_json_error(array('message' => __('You do not have permission to access the file manager.', 'file-manager-advanced')));
+			return;
+		}
+
 		// Check nonce for security
 		if (!wp_verify_nonce($_POST['nonce'], 'fmaskey')) {
 			wp_send_json_error(array('message' => __('Security check failed', 'file-manager-advanced')));
 			return;
 		}
 
-		// Get the PHP code and file info from POST data
-		$php_code = wp_unslash($_POST['php_code']);
+		// Get the PHP code and file info from POST data.
+		// Keep php_code slashed here; connector applies wp_unslash once on put content.
+		$php_code = isset($_POST['php_code']) ? $_POST['php_code'] : '';
 		$file_hash = sanitize_text_field($_POST['file_hash']);
 		$filename = sanitize_text_field(wp_unslash($_POST['filename']));
 
@@ -291,7 +415,6 @@ class class_fma_main
 			$_POST = array(
 				'cmd' => 'put',
 				'target' => $file_hash,
-				// Pass raw content: elFinder does not stripslashes on modern PHP; wp_slash() corrupts \" sequences.
 				'content' => $php_code,
 				'action' => 'fma_load_fma_ui',
 				'_fmakey' => wp_create_nonce('fmaskey')
@@ -357,28 +480,6 @@ class class_fma_main
 				'message' => sprintf(__('Error saving file: %s', 'file-manager-advanced'), $e->getMessage()),
 				'exception' => $e->getMessage()
 			));
-		}
-	}
-
-	/**
-	 * Handle elFinder POST data to remove WordPress slashes
-	 */
-	public function handle_elfinder_post_data()
-	{
-		// Only process on admin AJAX requests for our file manager
-		if (!is_admin() || !defined('DOING_AJAX') || !DOING_AJAX) {
-			return;
-		}
-
-		// Check if this is our elFinder request
-		if (!isset($_POST['action']) || $_POST['action'] !== 'fma_load_fma_ui') {
-			return;
-		}
-
-		// WordPress slashes $_POST; elFinder only stripslashes when magic_quotes_gpc (removed in PHP 5.4+).
-		if (isset($_POST['cmd']) && 'put' === $_POST['cmd'] && isset($_POST['content']) && is_string($_POST['content'])) {
-			$_POST['content']    = wp_unslash($_POST['content']);
-			$_REQUEST['content'] = $_POST['content'];
 		}
 	}
 

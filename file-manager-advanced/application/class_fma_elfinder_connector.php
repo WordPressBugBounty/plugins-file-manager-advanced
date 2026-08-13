@@ -17,6 +17,26 @@ if (class_exists('class_fma_elfinder_connector')) {
 class class_fma_elfinder_connector extends elFinderConnector
 {
 	/**
+	 * WordPress slashes $_POST; elFinder's parent filter only stripslashes when
+	 * magic_quotes_gpc is on (removed in PHP 5.4+). Apply wp_unslash on scalar
+	 * values only — parent recurses arrays via $this->input_filter(), so unslashing
+	 * the full array again would double-strip put content (\" becomes ").
+	 *
+	 * @param mixed $args Request argument or array of arguments.
+	 * @return mixed
+	 */
+	protected function input_filter($args)
+	{
+		if (is_array($args)) {
+			return parent::input_filter($args);
+		}
+
+		$args = parent::input_filter($args);
+
+		return function_exists('wp_unslash') ? wp_unslash($args) : $args;
+	}
+
+	/**
 	 * Host-safe passthrough fallback.
 	 *
 	 * @param resource $fp File pointer.

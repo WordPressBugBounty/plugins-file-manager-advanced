@@ -4,7 +4,7 @@
   Plugin URI: https://wordpress.org/plugins/file-manager-advanced
   Description: Cpanel for files management in wordpress
   Author: wpexpertsio
-  Version: 5.4.12
+  Version: 5.4.13
   Author URI: https://wpexperts.io
   License: GPLv2
 **/
@@ -61,6 +61,7 @@ if ( ! function_exists( 'fma_fs' ) ) {
  */
 require_once('constants.php');
 require_once FMAFILEPATH . 'application/fma-elfinder-helpers.php';
+require_once('application/class_fma_permissions.php');
 
 /**
  * Cleanup function - Shared by both uninstall and deactivation hooks
