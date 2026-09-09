@@ -37,6 +37,17 @@ class class_fma_elfinder_connector extends elFinderConnector
 	}
 
 	/**
+	 * Keep issuing a token for the JS client, but do not block write commands on it.
+	 */
+	protected function csrfProtectedCommand( $cmd ) {
+		return false;
+	}
+
+	protected function issueCsrfToken() {
+		return $this->generateCsrfToken();
+	}
+
+	/**
 	 * Host-safe passthrough fallback.
 	 *
 	 * @param resource $fp File pointer.

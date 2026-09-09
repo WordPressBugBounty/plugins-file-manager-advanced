@@ -166,6 +166,38 @@ class class_fma_permissions {
 	}
 
 	/**
+	 * Uses the configured Public Root Path when it differs from the default root.
+	 *
+	 * @param string $configured_path Public Root Path.
+	 * @param string $configured_url  Public Root URL.
+	 * @return array{path:string,url:string}
+	 */
+	public static function resolve_restricted_root( $configured_path = '', $configured_url = '' ) {
+		$uploads_path = self::get_restricted_root_path();
+		$uploads_url  = self::get_restricted_root_url();
+		$configured_path = is_string( $configured_path ) ? trim( $configured_path ) : '';
+		$configured_url  = is_string( $configured_url ) ? trim( $configured_url ) : '';
+
+		$default_path = untrailingslashit( wp_normalize_path( ABSPATH ) );
+
+		if ( '' === $configured_path || false !== strpos( $configured_path, '..' ) || $default_path === untrailingslashit( wp_normalize_path( $configured_path ) ) ) {
+			return array( 'path' => $uploads_path, 'url' => $uploads_url );
+		}
+
+		$real_candidate = realpath( $configured_path );
+		$candidate      = untrailingslashit( wp_normalize_path( $real_candidate ? $real_candidate : $configured_path ) );
+
+		if ( '' !== $configured_url && untrailingslashit( site_url() ) !== untrailingslashit( $configured_url ) ) {
+			return array( 'path' => $candidate, 'url' => $configured_url );
+		}
+
+		$relative = ltrim( substr( $candidate, strlen( $default_path ) ), '/' );
+		$url      = '' === $relative ? site_url() : trailingslashit( site_url() ) . $relative;
+
+		return array( 'path' => $candidate, 'url' => $url );
+	}
+
+	/**
 	 * MIME types denied for non-administrator upload and overwrite operations.
 	 *
 	 * @return array
@@ -193,18 +225,18 @@ class class_fma_permissions {
 	public static function get_restricted_file_attributes() {
 		return array(
 			array(
-				// Covers .php, .php.bak, .php~, etc.
+				// Covers .php, .php.bak, .php~, etc. Visible and downloadable, but locked/read-only for non-admins (AFM-989)
 				'pattern' => '/\.php(\.|$)/i',
-				'read'    => false,
+				'read'    => true,
 				'write'   => false,
-				'hidden'  => true,
+				'hidden'  => false,
 				'locked'  => true,
 			),
 			array(
 				'pattern' => '/\.phtml(\.|$)/i',
-				'read'    => false,
+				'read'    => true,
 				'write'   => false,
-				'hidden'  => true,
+				'hidden'  => false,
 				'locked'  => true,
 			),
 			array(
@@ -268,5 +300,31 @@ class class_fma_permissions {
 		}
 
 		return (bool) afm_plugin_file_validName( $name );
+	}
+
+	/**
+	 * Whether a filename is allowed for non-administrator download operations (AFM-989).
+	 * Allows downloading PHP files while keeping sensitive server configuration files blocked.
+	 *
+	 * @param string $name File name.
+	 * @return bool
+	 */
+	public static function is_restricted_download_filename_allowed( $name ) {
+		if ( empty( $name ) ) {
+			return false;
+		}
+
+		$lower_name = strtolower( $name );
+
+		if (
+			strpos( $lower_name, '.htaccess' ) !== false
+			|| strpos( $lower_name, 'wp-config' ) !== false
+			|| strpos( $lower_name, '.ini' ) !== false
+			|| strpos( $lower_name, '.config' ) !== false
+		) {
+			return false;
+		}
+
+		return true;
 	}
 }

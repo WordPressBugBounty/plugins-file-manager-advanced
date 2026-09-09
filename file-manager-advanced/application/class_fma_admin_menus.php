@@ -1398,8 +1398,16 @@ HTML;
             $save['fma_theme'] = isset($_POST['fma_theme']) ? sanitize_text_field($_POST['fma_theme']) : 'light';
             $save['fma_locale'] = isset($_POST['fma_locale']) ? sanitize_text_field($_POST['fma_locale']) : 'en';
             /* Directory Traversal fix @220723 */
-            $save['public_path'] = $this->afm_sanitize_directory($public_dir);
-            $save['public_url'] = isset($_POST['public_url']) ? sanitize_text_field($_POST['public_url']) : '';
+            $public_dir = ltrim($this->afm_sanitize_directory($public_dir), '/\\');
+            $save['public_path'] = trailingslashit(wp_normalize_path(ABSPATH)) . $public_dir;
+            $public_url = isset($_POST['public_url']) ? sanitize_text_field($_POST['public_url']) : '';
+            $default_public_url = untrailingslashit(site_url());
+
+            if (empty($public_url) || $default_public_url === untrailingslashit($public_url) || 0 === strpos($public_url, $default_public_url)) {
+                $save['public_url'] = empty($public_dir) ? $default_public_url : trailingslashit($default_public_url) . str_replace('\\', '/', $public_dir);
+            } else {
+                $save['public_url'] = $public_url;
+            }
             //25122022
             $save['upload_max_size'] = isset($_POST['upload_max_size']) ? sanitize_text_field($_POST['upload_max_size']) : '0';
             $save['display_ui_options'] = isset($_POST['display_ui_options']) ? array_map('sanitize_text_field', $_POST['display_ui_options']) : array();

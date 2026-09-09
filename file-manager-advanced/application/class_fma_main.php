@@ -159,6 +159,7 @@ class class_fma_main
 				array(
 					'assetsURL' => FMA_PLUGIN_URL . 'application/assets/',
 					'jsonURL' => rest_url(),
+					'siteURL' => untrailingslashit(site_url()),
 				),
 			);
 			// Enqueue SMTP scripts if we are on the settings page
@@ -389,6 +390,11 @@ class class_fma_main
 	{
 		if (!class_fma_permissions::user_has_file_manager_access()) {
 			wp_send_json_error(array('message' => __('You do not have permission to access the file manager.', 'file-manager-advanced')));
+			return;
+		}
+
+		if (!class_fma_permissions::has_unrestricted_filesystem_access()) {
+			wp_send_json_error(array('message' => __('You do not have permission to edit PHP files.', 'file-manager-advanced')));
 			return;
 		}
 

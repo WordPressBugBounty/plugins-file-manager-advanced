@@ -211,8 +211,29 @@
         }
     }
 
+    // Real-time synchronization of Public Root Path and Files URL (AFM-992)
+    function initPublicPathUrlSync() {
+        var $publicPath = $('#public_path');
+        var $publicUrl = $('#public_url');
+
+        if ($publicPath.length && $publicUrl.length) {
+            $publicPath.on('input change', function () {
+                var pathVal = $(this).val().trim();
+                // Strip leading/trailing slashes and directory traversal
+                pathVal = pathVal.replace(/^[\\\/]+|[\\\/]+$/g, '').replace(/\.\./g, '');
+
+                if (typeof afmAdmin !== 'undefined' && afmAdmin.siteURL) {
+                    var siteUrl = afmAdmin.siteURL.replace(/\/+$/, '');
+                    var newUrl = pathVal ? (siteUrl + '/' + pathVal) : siteUrl;
+                    $publicUrl.val(newUrl);
+                }
+            });
+        }
+    }
+
     $(document).ready(function () {
         fixAdminNotices();
+        initPublicPathUrlSync();
         // Check again after a short delay in case of dynamic insertions
         setTimeout(fixAdminNotices, 500);
         setTimeout(fixAdminNotices, 2000);

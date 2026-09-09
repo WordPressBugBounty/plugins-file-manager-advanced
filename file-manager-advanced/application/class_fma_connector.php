@@ -25,16 +25,24 @@ class class_fma_connector {
             $url = $settings['public_url'];
         }
 
-        // Non-admins are sandboxed to uploads so ABSPATH / core / plugins stay unreachable
-        // (AFM-885 / WPScan). Admins are not affected.
         if ( ! $is_admin ) {
-            $path = class_fma_permissions::get_restricted_root_path();
-            $url  = class_fma_permissions::get_restricted_root_url();
+            $restricted = class_fma_permissions::resolve_restricted_root(
+                isset( $settings['public_path'] ) ? $settings['public_path'] : '',
+                isset( $settings['public_url'] ) ? $settings['public_url'] : ''
+            );
+            $path = $restricted['path'];
+            $url  = $restricted['url'];
         }
 
-        if ( isset( $settings['hide_path'] ) && ($settings['hide_path'] == '1' ) ) {
-            $url = '';
-        }
+		// Keep elFinder file links valid when an old/default URL was saved.
+		$root_path = untrailingslashit( wp_normalize_path( $path ) );
+		$base_path = untrailingslashit( wp_normalize_path( ABSPATH ) );
+		$root_is_inside_site = $root_path === $base_path || 0 === strpos( $root_path . '/', trailingslashit( $base_path ) );
+
+		if ( $root_is_inside_site ) {
+			$root_relative_path = ltrim( substr( $root_path, strlen( $base_path ) ), '/' );
+			$url = '' === $root_relative_path ? site_url() : trailingslashit( site_url() ) . $root_relative_path;
+		}
 
         if ( !function_exists( 'elFinderAutoloader' ) ) {
             require 'library/php/autoload.php';
@@ -171,7 +179,7 @@ class class_fma_connector {
             // Same filename policy on every read/write path (not only get/put).
             $opts['bind']['put.pre']     = array( $this, 'on_put_command' );
             $opts['bind']['get.pre']     = array( $this, 'on_get_command' );
-            $opts['bind']['file.pre']    = array( $this, 'on_get_command' );
+            $opts['bind']['file.pre']    = array( $this, 'on_file_command' );
             $opts['bind']['zipdl.pre']   = array( $this, 'on_zipdl_command' );
             $opts['bind']['archive.pre'] = array( $this, 'on_archive_command' );
             $opts['bind']['rm.pre']      = array( $this, 'on_rm_command' );
@@ -237,7 +245,7 @@ class class_fma_connector {
 	}
 
 	/**
-	 * Block restricted read / download operations (get + file cmds).
+	 * Block restricted editor read operations (get cmd for code editor).
 	 */
 	public function on_get_command( $cmd, &$args, $elfinder, $volume ) {
 		if ( empty( $args['target'] ) || ! $volume ) {
@@ -260,7 +268,32 @@ class class_fma_connector {
 	}
 
 	/**
+	 * Block restricted single file download operations (file cmd).
+	 * Allows downloading PHP files for authorized non-admin roles (AFM-989).
+	 */
+	public function on_file_command( $cmd, &$args, $elfinder, $volume ) {
+		if ( empty( $args['target'] ) || ! $volume ) {
+			return;
+		}
+
+		$file = $volume->file( $args['target'] );
+		if ( ! $file || empty( $file['name'] ) ) {
+			return;
+		}
+
+		if ( ! class_fma_permissions::is_restricted_download_filename_allowed( $file['name'] ) ) {
+			return array(
+				'preventexec' => true,
+				'results'     => array(
+					'error' => array( elFinder::ERROR_ACCESS_DENIED ),
+				),
+			);
+		}
+	}
+
+	/**
 	 * Block zip download of restricted filenames.
+	 * Allows downloading PHP files in zip archives for authorized non-admin roles (AFM-989).
 	 */
 	public function on_zipdl_command( $cmd, &$args, $elfinder, $volume ) {
 		if ( empty( $args['targets'] ) || ! is_array( $args['targets'] ) || ! $volume ) {
@@ -276,7 +309,7 @@ class class_fma_connector {
 				// Directory zipdl is handled by archive.pre / volume locks.
 				continue;
 			}
-			if ( ! class_fma_permissions::is_restricted_write_filename_allowed( $file['name'] ) ) {
+			if ( ! class_fma_permissions::is_restricted_download_filename_allowed( $file['name'] ) ) {
 				return array(
 					'preventexec' => true,
 					'results'     => array(
@@ -501,8 +534,7 @@ class class_fma_connector {
 		$lower = isset( $file['name'] ) ? strtolower( $file['name'] ) : '';
 		$mime  = isset( $file['mime'] ) ? (string) $file['mime'] : '';
 
-		return ( substr( $lower, -4 ) === '.svg' )
-			|| ( substr( $lower, -4 ) === '.svgz' )
+		return (bool) preg_match( '/\.svgz?$/', $lower )
 			|| ( false !== strpos( $mime, 'svg' ) );
 	}
 
@@ -519,18 +551,21 @@ class class_fma_connector {
 			return true;
 		}
 
-		if ( null !== $content_hint && $this->file_content_looks_like_svg( $content_hint ) ) {
-			return true;
+		if ( null !== $content_hint ) {
+			return $this->file_content_looks_like_svg( $content_hint );
 		}
 
-		$sample = $this->read_volume_file_sample( $file, $volume );
-		return $this->file_content_looks_like_svg( $sample );
+		$content = $this->read_volume_file_content( $file, $volume );
+		return $this->file_content_looks_like_svg( $content );
 	}
 
 	/**
-	 * Content-based SVG detection (WPScan: type from contents, not only name).
+	 * Content-based SVG detection from parsed XML (AFM-974 / WPScan).
 	 *
-	 * @param string $content File contents or sample.
+	 * Root elements in the SVG namespace are detected regardless of prefix;
+	 * when XML cannot be parsed but still looks SVG-like, fail closed.
+	 *
+	 * @param string $content File contents.
 	 * @return bool
 	 */
 	private function file_content_looks_like_svg( $content ) {
@@ -543,20 +578,91 @@ class class_fma_connector {
 			return false;
 		}
 
-		$sample = ltrim( $content, "\xEF\xBB\xBF \t\n\r\0\x0B" );
-		$sample = substr( $sample, 0, 8192 );
+		$content = ltrim( $content, "\xEF\xBB\xBF \t\n\r\0\x0B" );
+		if ( '' === $content ) {
+			return false;
+		}
 
-		return (bool) preg_match( '/<\s*svg\b/i', $sample );
+		if ( $this->parsed_content_has_svg_root( $content ) ) {
+			return true;
+		}
+
+		return $this->unparsed_content_may_be_svg( $content );
 	}
 
 	/**
-	 * Read a small sample of a volume file for content sniffing.
+	 * Detect SVG root via DOM (namespace-aware, full document).
 	 *
-	 * @param array  $file   File stat.
-	 * @param object $volume Volume driver.
+	 * @param string $content XML/SVG file contents.
+	 * @return bool
+	 */
+	private function parsed_content_has_svg_root( $content ) {
+		if ( ! class_exists( 'DOMDocument' ) ) {
+			return false;
+		}
+
+		$previous = libxml_use_internal_errors( true );
+
+		$dom = new DOMDocument();
+		$loaded = $dom->loadXML(
+			$content,
+			LIBXML_NONET | LIBXML_COMPACT
+		);
+
+		libxml_clear_errors();
+		libxml_use_internal_errors( $previous );
+
+		if ( ! $loaded ) {
+			return false;
+		}
+
+		$root = $dom->documentElement;
+		if ( ! $root instanceof DOMElement ) {
+			return false;
+		}
+
+		return $this->dom_element_is_svg( $root );
+	}
+
+	/**
+	 * Whether a DOM element is an SVG document root.
+	 *
+	 * @param DOMElement $element Document root element.
+	 * @return bool
+	 */
+	private function dom_element_is_svg( DOMElement $element ) {
+		if ( 'svg' !== strtolower( $element->localName ) ) {
+			return false;
+		}
+
+		$namespace = $element->namespaceURI;
+
+		return ( null === $namespace || '' === $namespace || 'http://www.w3.org/2000/svg' === $namespace );
+	}
+
+	/**
+	 * Fail-closed fallback when XML parsing fails but payload may still be SVG.
+	 *
+	 * @param string $content File contents.
+	 * @return bool
+	 */
+	private function unparsed_content_may_be_svg( $content ) {
+		if ( '<' !== $content[0] && 0 !== strpos( $content, '<?xml' ) ) {
+			return false;
+		}
+
+		return (bool) preg_match( '/<\s*(?:[\w.-]+:)?svg\b/i', $content );
+	}
+
+	/**
+	 * Read volume file contents for SVG detection (full file, capped).
+	 *
+	 * @param array  $file      File stat.
+	 * @param object $volume    Volume driver.
+	 * @param int    $max_bytes Maximum bytes to read.
 	 * @return string
 	 */
-	private function read_volume_file_sample( $file, $volume ) {
+	private function read_volume_file_content( $file, $volume, $max_bytes = 10485760 ) {
 		if ( empty( $file['hash'] ) || ! method_exists( $volume, 'getPath' ) ) {
 			return '';
 		}
@@ -566,20 +672,24 @@ class class_fma_connector {
 			return '';
 		}
 
-		// Cap read size for large uploads.
 		$size = filesize( $path );
 		if ( false === $size || $size < 1 ) {
 			return '';
+		}
+
+		if ( $size <= $max_bytes ) {
+			$content = file_get_contents( $path );
+			return is_string( $content ) ? $content : '';
 		}
 
 		$fh = fopen( $path, 'rb' );
 		if ( ! $fh ) {
 			return '';
 		}
-		$sample = fread( $fh, 8192 );
+		$content = fread( $fh, $max_bytes );
 		fclose( $fh );
 
-		return is_string( $sample ) ? $sample : '';
+		return is_string( $content ) ? $content : '';
 	}
 
 	/**

@@ -4,7 +4,7 @@ Tags: file-manager, wp-file-manager, document management, ftp, advance-file-mana
 Requires at least: 4.0
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 5.4.13
+Stable tag: 5.4.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -411,6 +411,14 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 5.4.14 – September 09, 2026 =
+* Security Fix – Vulnerability Fix to prevent XSS attacks.
+* Enhancement – Added User-Specific File Path Access to allow administrators to define specific folder paths for different user roles.
+* Fix – Resolved compatibility issues with WordPress 7.1.
+* Fix – Resolved an issue where the Public Root Path restriction was not correctly applied to non-admin roles.
+* Fix – Fixed a bug where the "File URL" field would not update consistently when changing Public Root Path settings.
+* Fix – Resolved "Access denied. Invalid request" errors occurring in specific configurations.
 
 = 5.4.13 – August 13, 2026 =
 * Security Fix – Fixed a missing authorization vulnerability in file manager AJAX actions.
